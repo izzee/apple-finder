@@ -18,22 +18,23 @@ export default class ContentList extends React.Component {
 
   sortRows = () => {
     let asc = this.props.data.ascending
-    let files = this.props.data.files[this.props.data.activeContent]
+    let folders = this.props.data.folders.find(folder => folder.name === this.props.data.activeContent).documents
+    console.log(folders.documents)
     switch(this.props.data.sortBy) {
       case 'Name':
-        return files.sort((a,b) => {
+        return folders.sort((a,b) => {
           if(a.name > b.name){if(asc){return 1}else{return -1}}
           if(a.name < b.name){if(asc){return -1}else{return 1}}
-          else{return 0}
+          else{ return 0 }
         })
-      case 'Date Modified':
-      return files.sort((a,b) => {
-        if(a.dateModified > b.dateModified){if(asc){return 1}else{return -1}}
-        if(a.dateModified < b.dateModified){if(asc){return -1}else{return 1}}
-        else{return 0}
-      })
+      // case 'Date Modified':
+      //   return folders.sort((a,b) => {
+      //     if(a.dateModified > b.dateModified){if(asc){ return 1 }else{ return -1}}
+      //     if(a.dateModified < b.dateModified){if(asc){ return -1 }else{return 1}}
+      //     else{ return 0 }
+      //   })
       default:
-        return files;
+        return folders;
     }
   }
 
@@ -41,7 +42,7 @@ export default class ContentList extends React.Component {
     let files = this.sortRows()
     return files.map(file => {
       return <ContentRow
-        key={files.indexOf(file)} dataid={files.indexOf(file)}
+        key={file.id} dataid={files.indexOf(file)}
         data={file} clickedRow={this.props.data.clickedRow} selectRow={this.props.selectRow}/>
     })
   }
@@ -49,7 +50,7 @@ export default class ContentList extends React.Component {
   render(){
     return(
       <div className="content-list">
-        <div className="header-table"><table>
+        <div className="header-table"><table><thead>
           <tr>
             <th onClick={this.props.selectSortBy}>
               <span>Name</span>
@@ -68,10 +69,10 @@ export default class ContentList extends React.Component {
               <span>{this.upOrDown()}</span>
             </th>
           </tr>
-        </table></div>
-        <div className="body-table"><table>
+        </thead></table></div>
+        <div className="body-table"><table><tbody>
           {this.renderRows()}
-        </table></div>
+        </tbody></table></div>
       </div>
     )
   }

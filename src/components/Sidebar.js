@@ -2,8 +2,8 @@ import React from 'react'
 
 export default class Sidebar extends React.Component {
 
-  checkIfSelected = (key) => {
-    if(this.props.data.activeContent === key){
+  checkIfSelected = (folder) => {
+    if(this.props.data.activeContent === folder.name){
       return {backgroundColor: '#d8dfe8'}
     }else {
       return {backgroundColor: null}
@@ -11,17 +11,15 @@ export default class Sidebar extends React.Component {
   }
 
   renderSidebar = () => {
-    let filesets = Object.keys(this.props.data.files)
-    return filesets.map(key => {
+    return this.props.data.folders.map(folder => {
       return <li
-        key={filesets.indexOf(key)}
-        id={key}
+        key={folder.id}
+        id={folder.name}
         onClick={this.props.selectFileset}
-        style={this.checkIfSelected(key)}>
-          {key}
+        style={this.checkIfSelected(folder)}>
+          {folder.name}
         </li>
     })
-
   }
 
   render(){

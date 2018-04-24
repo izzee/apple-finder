@@ -6,7 +6,7 @@ body{
 }
 .window-container{
   position: relative;
-  margin: 15vh 15vw;
+  margin: 10vh 15vw;
   width: 70vw; height: 70vh;
   min-width: 666px; min-height: 500px;
   background-color: white;

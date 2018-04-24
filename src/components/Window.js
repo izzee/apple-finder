@@ -1,15 +1,16 @@
 import React from 'react'
-import {files} from '../Data'
+// import {files} from '../Data'
 import Topbar from './Topbar'
 import Sidebar from './Sidebar'
 import ContentList from './ContentList'
+const URL = 'http://localhost:3000/api/v1/folders'
 
 export default class Window extends React.Component {
 
   constructor(){
     super()
     this.state = {
-      files : files,
+      folders : [],
       activeContent : 'Documents',
       clickedRow : null,
       sortBy : null,
@@ -18,14 +19,15 @@ export default class Window extends React.Component {
   }
 
   componentDidMount = () => {
-    document.addEventListener("keydown", this.handleKeydown)
+    fetch(URL)
+    .then(res => res.json())
+    .then(res => this.setState({folders: res }))
   }
 
   handleKeydown = e => {
     var elem = document.getElementsByClassName("window-container");
-    console.log(elem.height);
     let row = this.state.clickedRow
-    let allRows = this.state.files[this.state.activeContent]
+    let allRows = this.state.folders.find(folder => folder.name === this.state.activeContent).documents
     if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
     if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
   }
@@ -50,13 +52,19 @@ export default class Window extends React.Component {
     }
   }
 
-  render() {
-    return(
-      <div className="window-container">
+  renderContents = () => {
+    if (this.state.folders.length !== 0) {
+      document.addEventListener("keydown", this.handleKeydown)
+      return <div className="window-container">
         <Topbar activeContent={this.state.activeContent}/>
-        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
         <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy}/>
-      </div>
+        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
+      </div> }
+    else { return null }
+  }
+
+  render() {
+    return(this.renderContents()
     )
   }
 }

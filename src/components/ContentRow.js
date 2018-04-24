@@ -16,9 +16,9 @@ export default class ContentRow extends React.Component {
         <td style={this.checkIfClicked()}>
           {this.props.data.name}
         </td>
-        <td>{this.props.data.dateModified}</td>
-        <td>{this.props.data.fileSize}</td>
-        <td>{this.props.data.kind}</td>
+        <td>Jan 1 2000</td>
+        <td>--</td>
+        <td>--</td>
       </tr>
     )
   }
