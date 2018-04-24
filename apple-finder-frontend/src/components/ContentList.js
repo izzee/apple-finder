@@ -49,8 +49,7 @@ export default class ContentList extends React.Component {
   render(){
     return(
       <div className="content-list">
-        <table>
-          <thead>
+        <div className="header-table"><table>
           <tr>
             <th onClick={this.props.selectSortBy}>
               <span>Name</span>
@@ -69,11 +68,10 @@ export default class ContentList extends React.Component {
               <span>{this.upOrDown()}</span>
             </th>
           </tr>
-          </thead>
-          <tbody>
-            {this.renderRows()}
-          </tbody>
-        </table>
+        </table></div>
+        <div className="body-table"><table>
+          {this.renderRows()}
+        </table></div>
       </div>
     )
   }

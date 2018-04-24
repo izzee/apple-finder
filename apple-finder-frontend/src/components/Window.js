@@ -22,15 +22,18 @@ export default class Window extends React.Component {
   }
 
   handleKeydown = e => {
+    var elem = document.getElementsByClassName("window-container");
+    console.log(elem.height);
     let row = this.state.clickedRow
-    let activeFiles = this.state.files[this.state.activeContent]
-    if(e.keyCode === 38){this.setState({clickedRow : row>0 ? row-1 : activeFiles.length-1})}
-    else if(e.keyCode === 40){this.setState({clickedRow : row<activeFiles.length-1 ? row+1 : 0})}
+    let allRows = this.state.files[this.state.activeContent]
+    if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
+    if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
   }
 
   selectRow = e => {
-    if(parseInt(e.currentTarget.id, 10) === this.state.clickedRow){console.log('2x clicked')}
-    this.setState({clickedRow: parseInt(e.currentTarget.id)})
+    let id = parseInt(e.currentTarget.id, 10)
+    if(id === this.state.clickedRow){console.log('2x clicked')}
+    this.setState({clickedRow: id})
   }
 
   selectFileset = e => {
@@ -51,10 +54,8 @@ export default class Window extends React.Component {
     return(
       <div className="window-container">
         <Topbar activeContent={this.state.activeContent}/>
-        <div className="main-content">
-          <Sidebar data={this.state} selectFileset={this.selectFileset}/>
-          <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy}/>
-        </div>
+        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
+        <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy}/>
       </div>
     )
   }

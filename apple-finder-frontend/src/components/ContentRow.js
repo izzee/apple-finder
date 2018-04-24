@@ -3,7 +3,7 @@ import React from 'react'
 export default class ContentRow extends React.Component {
 
   checkIfClicked = () => {
-    if(parseInt(this.props.clickedRow) === this.props.dataid){
+    if (this.props.clickedRow === this.props.dataid){
       return {backgroundColor: '#116cd6', color: 'white'}
     }else {
       return {backgroundColor: null, color: null}
