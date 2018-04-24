@@ -14,7 +14,9 @@ export default class Window extends React.Component {
       activeContent : 'Documents',
       clickedRow : null,
       sortBy : null,
-      ascending : false
+      ascending : false,
+      history : [],
+      future : []
     }
   }
 
@@ -25,7 +27,6 @@ export default class Window extends React.Component {
   }
 
   handleKeydown = e => {
-    var elem = document.getElementsByClassName("window-container");
     let row = this.state.clickedRow
     let allRows = this.state.folders.find(folder => folder.name === this.state.activeContent).documents
     if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
@@ -39,7 +40,7 @@ export default class Window extends React.Component {
   }
 
   selectFileset = e => {
-    if(e.currentTarget.id !== this.state.activeContent){this.setState({clickedRow : null, sortBy : null})}
+    if(e.currentTarget.id !== this.state.activeContent){this.setState({history : [...this.state.history, this.state.activeContent], clickedRow : null, sortBy : null})}
     this.setState({activeContent: e.currentTarget.id})
   }
 
@@ -52,11 +53,32 @@ export default class Window extends React.Component {
     }
   }
 
+  historyBack = () => {
+    if (this.state.history.length > 0){
+      let newHistory = [...this.state.history]
+      let lastItem = newHistory.splice(newHistory.length-1)[0]
+      this.setState({history : newHistory, future: [...this.state.future, lastItem], activeContent : lastItem})
+    }else{
+      return false
+    }
+  }
+
+  historyForward = () => {
+    if (this.state.future.length > 0){
+      let newFuture = [...this.state.future]
+      let nextItem = newFuture.splice(newFuture.length-1)[0]
+      console.log(nextItem)
+      this.setState({future : newFuture, history: [...this.state.history, nextItem], activeContent : nextItem})
+    }else{
+      return false
+    }
+  }
+
   renderContents = () => {
     if (this.state.folders.length !== 0) {
       document.addEventListener("keydown", this.handleKeydown)
       return <div className="window-container">
-        <Topbar activeContent={this.state.activeContent}/>
+        <Topbar data={this.state} historyBack={this.historyBack} historyForward={this.historyForward}/>
         <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy}/>
         <Sidebar data={this.state} selectFileset={this.selectFileset}/>
       </div> }

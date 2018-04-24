@@ -17,10 +17,12 @@ export default class ContentList extends React.Component {
   }
 
   sortRows = () => {
+    console.log('future: ', this.props.data.future)
+    console.log('history: ', this.props.data.history)
+
     let asc = this.props.data.ascending
     let folders = this.props.data.folders.find(folder => folder.name === this.props.data.activeContent).documents
-    console.log(folders.documents)
-    switch(this.props.data.sortBy) {
+    switch(this.sorted()) {
       case 'Name':
         return folders.sort((a,b) => {
           if(a.name > b.name){if(asc){return 1}else{return -1}}
@@ -66,7 +68,7 @@ export default class ContentList extends React.Component {
             </th>
             <th onClick={this.props.selectSortBy}>
               <span>Kind</span>
-              <span>{this.upOrDown()}</span>
+              <span className="header-border">{this.upOrDown('Kind')}</span>
             </th>
           </tr>
         </thead></table></div>
