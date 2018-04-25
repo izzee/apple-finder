@@ -6,23 +6,27 @@ import ChevronDown from 'react-icons/lib/fa/chevron-down';
 
 export default class ContentList extends React.Component {
 
-  sorted = () => {
-    return this.props.data.sortBy
-  }
-
   upOrDown = (category) => {
-    if(category === this.sorted()){
+    if(category === this.props.data.sortBy){
       if(this.props.data.ascending){ return <ChevronUp/>} else { return <ChevronDown/> }
     }
   }
 
-  sortRows = () => {
-    console.log('future: ', this.props.data.future)
-    console.log('history: ', this.props.data.history)
+  searchRows = () => {
+    let filtered = []
+    let folders = this.props.data.folders
+    let search = this.props.data.search
+    folders.forEach(folder => {folder.documents.forEach(doc => {
+      if(doc.name.toLowerCase().includes(search)){filtered.push(doc)}
+    })})
+    return filtered
+  }
 
+  sortRows = () => {
     let asc = this.props.data.ascending
     let folders = this.props.data.folders.find(folder => folder.name === this.props.data.activeContent).documents
-    switch(this.sorted()) {
+    if(this.props.data.search){folders = this.searchRows()}
+    switch(this.props.data.sortBy) {
       case 'Name':
         return folders.sort((a,b) => {
           if(a.name > b.name){if(asc){return 1}else{return -1}}
@@ -44,9 +48,17 @@ export default class ContentList extends React.Component {
     let files = this.sortRows()
     return files.map(file => {
       return <ContentRow
-        key={file.id} dataid={files.indexOf(file)}
-        data={file} clickedRow={this.props.data.clickedRow} selectRow={this.props.selectRow}/>
+        key={file.id} index={files.indexOf(file)} dataid={file.id}
+        data={file} clickedRow={this.props.data.clickedRow} selectRow={this.props.selectRow} renderContextMenu={this.props.renderContextMenu}/>
     })
+  }
+
+  renderPlaceholderRows = () => {
+    let emptySpace = (Math.floor(((this.props.data.height*.7-76)/20) - this.sortRows().length))
+    if (emptySpace > 0){
+      let i=0;
+      return [...Array(emptySpace)].map(row => { return <tr key={i++}><td></td><td></td><td></td><td></td></tr>})
+    }
   }
 
   render(){
@@ -74,6 +86,7 @@ export default class ContentList extends React.Component {
         </thead></table></div>
         <div className="body-table"><table><tbody>
           {this.renderRows()}
+          {this.renderPlaceholderRows()}
         </tbody></table></div>
       </div>
     )

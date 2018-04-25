@@ -6,9 +6,8 @@ body{
 }
 .window-container{
   position: relative;
-  margin: 10vh 15vw;
+  margin: 15vh 15vw;
   width: 70vw; height: 70vh;
-  min-width: 666px; min-height: 500px;
   background-color: white;
   box-shadow: 0 1px 2px #3e5e84;
   border-radius: 5px;
@@ -130,14 +129,22 @@ body{
   border-bottom-right-radius: 5px;
 }
 .header-table{
-  height: 23px;
-  line-height: 23px;
   background-color: #f0f0f0;
+  height: 23px;
   border-bottom: 1px solid #c5c5c5;
 }
 .header-table th{
+  padding-top: 2px;
+  height: 20px;
+  position: relative;
   padding-left: 10px;
-  font-weight: normal
+  font-weight: normal;
+  background-color: #f0f0f0;
+  text-overflow: clip;
+  overflow: hidden;
+}
+.header-table th:active{
+  background-color: #eaeaea;
 }
 .header-table table, .body-table table{
   border-collapse: collapse;
@@ -145,9 +152,8 @@ body{
   width: 100%;
 }
 .header-table th .header-border{
-  position:relative;
-  float: right;
-  margin-top: 2px;
+  position:absolute;
+  top: 3px; right:0px;
   height: 17px; width: 15px;
   border-right: 1px solid #d8d8d8;
 }
@@ -176,11 +182,11 @@ body{
 }
 .header-table th:nth-child(1), .body-table td:nth-child(1){
   color: #3b393b;
-  width: 60%;
+  width: 55%;
 }
 .header-table th:nth-child(2), .body-table td:nth-child(2){
   width: 20%;
 }
-.header-table th:nth-child(3), .body-table td:nth-child(3){
+.header-table th:nth-child(3,4), .body-table td:nth-child(3,4){
   width: 10%;
 }

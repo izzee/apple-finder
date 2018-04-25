@@ -3,16 +3,19 @@ import React from 'react'
 export default class ContentRow extends React.Component {
 
   checkIfClicked = () => {
-    if (this.props.clickedRow === this.props.dataid){
+    if (this.props.clickedRow === this.props.index){
       return {backgroundColor: '#116cd6', color: 'white'}
     }else {
       return {backgroundColor: null, color: null}
     }
   }
+  logRightClick = (e) => {
+    console.log(e.type)
+  }
 
   renderData = () => {
     return(
-      <tr id={this.props.dataid} onClick={this.props.selectRow} style={this.checkIfClicked()}>
+      <tr id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
         <td style={this.checkIfClicked()}>
           {this.props.data.name}
         </td>

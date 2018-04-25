@@ -6,7 +6,7 @@ export default class Topbar extends React.Component {
 
   checkHistory = () => {
     if(this.props.data.history.length > 0){
-      return {color : 'black'}
+      return {color : '#808080'}
     }else{
       return null
     }
@@ -14,7 +14,7 @@ export default class Topbar extends React.Component {
 
   checkFuture = () => {
     if (this.props.data.future.length > 0){
-      return {color : 'black'}
+      return {color : '#808080'}
     }else{
       return null
     }
@@ -29,13 +29,13 @@ export default class Topbar extends React.Component {
             <div className="min-button"></div>
             <div className="max-button"></div>
           </div>
-          <div className="topbar-title">{this.props.data.activeContent}</div>
+          <div className="topbar-title">{this.props.data.search ? 'Searching...' : this.props.data.activeContent}</div>
           <div className="forward-back">
             <div className="back-button" onClick={this.props.historyBack} style={this.checkHistory()}><ChevronLeft/></div>
             <div className="forward-button" onClick={this.props.historyForward} style={this.checkFuture()}><ChevronRight/></div>
           </div>
           <form>
-            <input className="search-field" placeholder="Search"></input>
+            <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search}></input>
           </form>
       </div>
     )
