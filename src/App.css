@@ -100,6 +100,7 @@ body{
   grid-column:1/2;
   grid-row: 2;
   background-color: #f6f6f6;
+  border-right: 1px solid #dfdfdf;
   border-bottom-left-radius: 5px;
 }
 .sidebar h5{
@@ -120,10 +121,8 @@ body{
   line-height: 23px;
 }
 .content-list{
-  border-left: 1px solid #dfdfdf;
   grid-row: 2/3;
   grid-column:2/3;
-  max-height: 70vh;
   overflow: hidden;
   padding-bottom: 23px;
   border-bottom-right-radius: 5px;
@@ -147,9 +146,9 @@ body{
   background-color: #eaeaea;
 }
 .header-table table, .body-table table{
+  width: 100%;
   border-collapse: collapse;
   text-align: left;
-  width: 100%;
 }
 .header-table th .header-border{
   position:absolute;
@@ -170,14 +169,22 @@ body{
   height: 100%;
   overflow: scroll;
 }
+.body-table td{
+  padding-left: 10px;
+  align-content: center;
+
+}
 .body-table tr{
+  vertical-align: bottom;
+  border: 2px solid white;
   color: #8c8c8c;
   height: 20px;
 }
-.body-table td{
-  padding-left: 10px;
+.body-table tr:nth-child(1){
+  border: 2px solid rgba(0,0,0,0);
 }
 .body-table tr:nth-child(even){
+  border: 2px solid #f5f5f5;
   background-color: #f5f5f5;
 }
 .header-table th:nth-child(1), .body-table td:nth-child(1){
@@ -189,4 +196,13 @@ body{
 }
 .header-table th:nth-child(3,4), .body-table td:nth-child(3,4){
   width: 10%;
+}
+.context-menu{
+  z-index: 10;
+  border-radius: 4px;
+  background-color: #f4f4f4;
+  box-shadow: 0 .5px 1px #4a4a4a;
+  min-width: 100px;
+  min-height: 150px;
+  position: fixed;
 }

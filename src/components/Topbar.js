@@ -20,10 +20,17 @@ export default class Topbar extends React.Component {
     }
   }
 
+  renderMobileVersion = () => {
+    if(this.props.mobileVersion()){
+      return {gridColumn: '1/4'}
+    }else{
+      return {gridColumn : null}
+    }
+  }
 
   render(){
     return(
-      <div className="topbar">
+      <div className="topbar" style={this.renderMobileVersion()}>
           <div className="left-buttons">
             <div className="close-button"></div>
             <div className="min-button"></div>

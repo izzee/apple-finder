@@ -48,8 +48,7 @@ export default class ContentList extends React.Component {
     let files = this.sortRows()
     return files.map(file => {
       return <ContentRow
-        key={file.id} index={files.indexOf(file)} dataid={file.id}
-        data={file} clickedRow={this.props.data.clickedRow} selectRow={this.props.selectRow} renderContextMenu={this.props.renderContextMenu}/>
+        key={file.id} index={files.indexOf(file)} dataid={file.id} fileInfo={file} data={this.props.data} selectRow={this.props.selectRow} renderContextMenu= {this.props.renderContextMenu}/>
     })
   }
 
@@ -61,9 +60,17 @@ export default class ContentList extends React.Component {
     }
   }
 
+  renderMobileVersion = () => {
+    if(this.props.mobileVersion()){
+      return {gridColumn: '1/4', borderBottomLeftRadius: '5px', borderLeft: 'none'}
+    }else{
+      return {gridColumn : null, borderBottomLeftRadius: null, borderLeft: null}
+    }
+  }
+
   render(){
     return(
-      <div className="content-list">
+      <div className="content-list" style={this.renderMobileVersion()}>
         <div className="header-table"><table><thead>
           <tr>
             <th onClick={this.props.selectSortBy}>
@@ -80,7 +87,6 @@ export default class ContentList extends React.Component {
             </th>
             <th onClick={this.props.selectSortBy}>
               <span>Kind</span>
-              <span className="header-border">{this.upOrDown('Kind')}</span>
             </th>
           </tr>
         </thead></table></div>

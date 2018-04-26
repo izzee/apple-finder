@@ -14,6 +14,7 @@ export default class Window extends React.Component {
       folders : [],
       activeContent : 'Documents',
       clickedRow : null,
+      highlightedRow : null,
       search : "",
       sortBy : null,
       ascending : false,
@@ -21,7 +22,7 @@ export default class Window extends React.Component {
       future : [],
       height : 0,
       width: 0,
-      contextMenu : {}
+      contextMenu : null
     }
   }
 
@@ -34,45 +35,56 @@ export default class Window extends React.Component {
   }
 
   updateWindowDimensions = () => {
-    this.setState({height: window.innerHeight, width: window.innerWidth})
+    this.setState({height: window.innerHeight, width: window.innerWidth, contextMenu: null})
   }
 
   handleKeydown = e => {
+    e.preventDefault()
     let row = this.state.clickedRow
     let allRows = this.state.folders.find(folder => folder.name === this.state.activeContent).documents
-    if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
-    if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
+    if(row){
+      if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
+      if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
+    }
+  }
+
+  clearContextMenu = e => {
+    e.preventDefault()
+    if(this.state.contextMenu && e.type === 'click' || e.target.className !== 'row'){
+      this.setState({contextMenu : null})
+    }
   }
 
   selectRow = e => {
     let id = parseInt(e.currentTarget.dataset.id, 10)
     if(id === this.state.clickedRow){console.log('2x clicked')}
-    this.setState({clickedRow: id})
+    this.setState({clickedRow: id, highlightedRow: null})
   }
 
   renderContextMenu = e => {
-    e.preventDefault();
-    let contextMenuInfo = {x: e.clientX, y: e.clientY}
-    return <ContextMenu data={e}/>
+    e.preventDefault()
+    let rowId = parseInt(e.currentTarget.dataset.id)
+    let contextMenuInfo = {target: e.currentTarget.id, x: e.clientX, y: e.clientY}
+    this.setState({contextMenu : contextMenuInfo, highlightedRow: rowId, clickedRow : null})
   }
 
   selectFileset = e => {
     if(e.currentTarget.id !== this.state.activeContent){
-    this.setState({history : [...this.state.history, this.state.activeContent], clickedRow : null, sortBy : null, search : ""})}
+    this.setState({history : [...this.state.history, this.state.activeContent],
+      clickedRow : null, highlightedRow: null, sortBy : null, search : ""})}
     this.setState({activeContent: e.currentTarget.id})
   }
 
   handleSearch = e => {
-    // console.log(e.currentTarget.value)
-    this.setState({search : e.currentTarget.value, clickedRow : null})
+    this.setState({search : e.currentTarget.value, clickedRow : null, highlightedRow: null,})
   }
 
   selectSortBy = e => {
     let category = e.currentTarget.querySelector('span').innerText
     if (this.state.sortBy === category){
-      this.setState({ascending : !this.state.ascending})
+      this.setState({ascending : !this.state.ascending, clickedRow : null, highlightedRow: null,})
     }else{
-      this.setState({sortBy: category, clickedRow : null})
+      this.setState({sortBy: category, clickedRow : null, highlightedRow: null,})
     }
   }
 
@@ -92,16 +104,24 @@ export default class Window extends React.Component {
     }
   }
 
+  mobileVersion = () => {
+    return this.state.width < 500
+  }
+
   renderContents = () => {
     if (this.state.folders.length !== 0) {
       document.addEventListener("keydown", this.handleKeydown)
-      return <div className="window-container">
-        <Topbar data={this.state} historyBack={this.historyBack} historyForward={this.historyForward} handleSearch={this.handleSearch}/>
-        <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu}/>
-        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
+      return <div className="window-container" onClick={this.clearContextMenu} onContextMenu={this.clearContextMenu}>
+        <Topbar data={this.state} historyBack={this.historyBack} historyForward={this.historyForward} handleSearch={this.handleSearch} mobileVersion={this.mobileVersion}/>
+        <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} mobileVersion={this.mobileVersion}/>
+        <Sidebar data={this.state} selectFileset={this.selectFileset} mobileVersion={this.mobileVersion}/>
+        {this.state.contextMenu ? <ContextMenu info={this.state.contextMenu}/> : null}
       </div> }
+
     else { return null }
   }
+
+
 
   render() {
     return(this.renderContents())
