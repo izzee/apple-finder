@@ -48,7 +48,7 @@ export default class ContentList extends React.Component {
     let files = this.sortRows()
     return files.map(file => {
       return <ContentRow
-        key={file.id} index={files.indexOf(file)} dataid={file.id} fileInfo={file} data={this.props.data} selectRow={this.props.selectRow} renderContextMenu= {this.props.renderContextMenu}/>
+        key={file.id} index={files.indexOf(file)} dataid={file.id} fileInfo={file} data={this.props.data} selectRow={this.props.selectRow} handleNameChange={this.props.handleNameChange} renderContextMenu= {this.props.renderContextMenu}/>
     })
   }
 

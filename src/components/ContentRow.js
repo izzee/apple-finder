@@ -1,4 +1,5 @@
 import React from 'react'
+import AutosizeInput from 'react-input-autosize';
 
 export default class ContentRow extends React.Component {
 
@@ -9,6 +10,22 @@ export default class ContentRow extends React.Component {
       return {backgroundColor: null,  color: null, border: '2px solid #116cd6'}
     }else {
       return {backgroundColor: null, color: null, border: null}
+    }
+  }
+
+  checkIfRenaming = () => {
+    if(this.props.data.renamingFile === this.props.dataid){
+      return <td><AutosizeInput
+        autoFocus
+        maxLength="25"
+        name="form-field-name"
+        value={this.props.data.newFileName}
+        placeholder={this.props.fileInfo.name}
+        onChange={this.props.handleNameChange}
+        inputStyle={{backgroundColor: this.props.data.newFileName ? 'White' : null}}/>
+      </td>
+    }else{
+      return <td style={this.tdStyling()}>{this.props.fileInfo.name}</td>
     }
   }
 
@@ -24,9 +41,7 @@ export default class ContentRow extends React.Component {
   renderData = () => {
     return(
       <tr className={"row"} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
-        <td style={this.tdStyling()}>
-          {this.props.fileInfo.name}
-        </td>
+        {this.checkIfRenaming()}
         <td style={this.tdStyling()}>Jan 1 2000</td>
         <td style={this.tdStyling()}>--</td>
         <td style={this.tdStyling()}>--</td>

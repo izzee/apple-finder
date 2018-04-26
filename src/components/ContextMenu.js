@@ -12,8 +12,9 @@ export default class ContextMenu extends React.Component {
   }
 
   handleClick = e => {
-    console.log(e.currentTarget.innerText)
-    console.log(this.props.info.target)
+    if(e.currentTarget.innerText === 'Rename'){
+      this.props.renameFile()
+    }
   }
 
   render(){
