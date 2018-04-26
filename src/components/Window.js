@@ -22,7 +22,8 @@ export default class Window extends React.Component {
       future : [],
       height : 0,
       width: 0,
-      contextMenu : null
+      contextMenu : null,
+      focused : true
     }
   }
 
@@ -32,6 +33,8 @@ export default class Window extends React.Component {
     .then(res => this.setState({folders: res }))
     this.updateWindowDimensions()
     window.addEventListener('resize', this.updateWindowDimensions)
+    window.addEventListener("blur", this.focusBlur)
+    window.addEventListener("focus", this.focusBlur)
   }
 
   updateWindowDimensions = () => {
@@ -39,21 +42,35 @@ export default class Window extends React.Component {
   }
 
   handleKeydown = e => {
-    e.preventDefault()
+    if(e.keyCode === 38 || e.keyCode === 40){e.preventDefault()}
     let row = this.state.clickedRow
-    let allRows = this.state.folders.find(folder => folder.name === this.state.activeContent).documents
-    if(row){
+    let allRows = document.getElementsByClassName('row')
+    if(row !== null){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
       if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
+      let activeRow = [...allRows].find(rowNum => {return parseInt(rowNum.dataset.id) === this.state.clickedRow})
+      activeRow.scrollIntoViewIfNeeded()
     }
   }
 
   clearContextMenu = e => {
     e.preventDefault()
-    if(this.state.contextMenu && e.type === 'click' || e.target.className !== 'row'){
-      this.setState({contextMenu : null})
+    if(e.target.parentNode.className !== 'context-menu'){
+      if(e.type === 'click' || e.target.parentNode.className !== 'row'){
+        this.setState({contextMenu : null})
+      }
     }
   }
+
+  renderContextMenu = e => {
+    e.preventDefault()
+    if(this.state.focused){
+      let rowId = parseInt(e.currentTarget.dataset.id)
+      let contextMenuInfo = {target: e.currentTarget.id, x: e.clientX, y: e.clientY}
+      this.setState({contextMenu : contextMenuInfo, highlightedRow: rowId, clickedRow : null})
+    }
+  }
+
 
   selectRow = e => {
     let id = parseInt(e.currentTarget.dataset.id, 10)
@@ -61,18 +78,11 @@ export default class Window extends React.Component {
     this.setState({clickedRow: id, highlightedRow: null})
   }
 
-  renderContextMenu = e => {
-    e.preventDefault()
-    let rowId = parseInt(e.currentTarget.dataset.id)
-    let contextMenuInfo = {target: e.currentTarget.id, x: e.clientX, y: e.clientY}
-    this.setState({contextMenu : contextMenuInfo, highlightedRow: rowId, clickedRow : null})
-  }
-
   selectFileset = e => {
     if(e.currentTarget.id !== this.state.activeContent){
     this.setState({history : [...this.state.history, this.state.activeContent],
       clickedRow : null, highlightedRow: null, sortBy : null, search : ""})}
-    this.setState({activeContent: e.currentTarget.id})
+    this.setState({activeContent: e.currentTarget.id, sortBy : null})
   }
 
   handleSearch = e => {
@@ -108,6 +118,13 @@ export default class Window extends React.Component {
     return this.state.width < 500
   }
 
+  focusBlur = e => {
+    this.setState({focused : e.type === 'focus'})
+    if (!this.state.focused){
+      this.setState({contextMenu: null, highlightedRow: null})
+    }
+  }
+
   renderContents = () => {
     if (this.state.folders.length !== 0) {
       document.addEventListener("keydown", this.handleKeydown)
@@ -117,7 +134,6 @@ export default class Window extends React.Component {
         <Sidebar data={this.state} selectFileset={this.selectFileset} mobileVersion={this.mobileVersion}/>
         {this.state.contextMenu ? <ContextMenu info={this.state.contextMenu}/> : null}
       </div> }
-
     else { return null }
   }
 

@@ -28,7 +28,7 @@ export default class ContentList extends React.Component {
     if(this.props.data.search){folders = this.searchRows()}
     switch(this.props.data.sortBy) {
       case 'Name':
-        return folders.sort((a,b) => {
+        return [...folders].sort((a,b) => {
           if(a.name > b.name){if(asc){return 1}else{return -1}}
           if(a.name < b.name){if(asc){return -1}else{return 1}}
           else{ return 0 }
@@ -68,29 +68,38 @@ export default class ContentList extends React.Component {
     }
   }
 
+  preventScroll = () =>{
+    if(this.props.data.contextMenu){
+      return {overflow: 'hidden'}
+    }else{
+      return {overflow: null}
+    }
+  }
+
   render(){
     return(
       <div className="content-list" style={this.renderMobileVersion()}>
         <div className="header-table"><table><thead>
           <tr>
             <th onClick={this.props.selectSortBy}>
-              <span>Name</span>
+              <span style={{fontWeight: this.upOrDown('Name') ? '500' : null}}>Name</span>
               <span className="header-border">{this.upOrDown('Name')}</span>
             </th>
             <th onClick={this.props.selectSortBy}>
-              <span>Date Modified</span>
+              <span style={{fontWeight: this.upOrDown('Date Modified') ? '500' : null}}>Date Modified</span>
               <span className="header-border">{this.upOrDown('Date Modified')}</span>
             </th>
             <th onClick={this.props.selectSortBy}>
-              <span>Size</span>
+              <span style={{fontWeight: this.upOrDown('Size') ? '500' : null}}>Size</span>
               <span className="header-border">{this.upOrDown('Size')}</span>
             </th>
             <th onClick={this.props.selectSortBy}>
-              <span>Kind</span>
+              <span style={{fontWeight: this.upOrDown('Kind') ? '500' : null}}>Kind</span>
+              <span className="header-border">{this.upOrDown('Kind')}</span>
             </th>
           </tr>
         </thead></table></div>
-        <div className="body-table"><table><tbody>
+        <div className="body-table" style={this.preventScroll()}><table><tbody>
           {this.renderRows()}
           {this.renderPlaceholderRows()}
         </tbody></table></div>

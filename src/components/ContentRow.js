@@ -23,13 +23,13 @@ export default class ContentRow extends React.Component {
   }
   renderData = () => {
     return(
-      <tr id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
-        <td className="row" style={this.tdStyling()}>
+      <tr className={"row"} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
+        <td style={this.tdStyling()}>
           {this.props.fileInfo.name}
         </td>
-        <td className="row" style={this.tdStyling()}>Jan 1 2000</td>
-        <td className="row" style={this.tdStyling()}>--</td>
-        <td className="row" style={this.tdStyling()}>--</td>
+        <td style={this.tdStyling()}>Jan 1 2000</td>
+        <td style={this.tdStyling()}>--</td>
+        <td style={this.tdStyling()}>--</td>
       </tr>
     )
   }
