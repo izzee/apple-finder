@@ -12,20 +12,21 @@ export default class Window extends React.Component {
     super()
     this.state = {
       folders : [],
-      activeContent : 'Documents',
       clickedRow : null,
       highlightedRow : null,
+      //refactor
+      activeContent : 'Documents',
       search : "",
       sortBy : null,
       ascending : false,
-      history : [],
-      future : [],
-      height : 0,
-      width: 0,
+      // refactor
+      sort: {by: null, ascending: false},
       contextMenu : null,
       renamingFile : null,
       newFileName : null,
-      focused : true
+      //refactored
+      history: {back: [], forward: []},
+      window: {height: null, width: null, focused: true}
     }
   }
 
@@ -40,7 +41,8 @@ export default class Window extends React.Component {
   }
 
   updateWindowDimensions = () => {
-    this.setState({height: window.innerHeight, width: window.innerWidth, contextMenu: null})
+    let newDimensions = {height: window.innerHeight, width: window.innerWidth, focused: true}
+    this.setState({window: newDimensions, contextMenu: null})
   }
 
   handleKeydown = e => {
@@ -53,7 +55,6 @@ export default class Window extends React.Component {
     if(row !== null){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
       if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
-
       let activeRow = [...allRows].find(rowNum => {return parseInt(rowNum.dataset.id) === this.state.clickedRow})
       activeRow.scrollIntoViewIfNeeded()
     }
@@ -70,7 +71,7 @@ export default class Window extends React.Component {
 
   renderContextMenu = e => {
     e.preventDefault()
-    if(this.state.focused){
+    if(this.state.window.focused){
       let rowId = parseInt(e.currentTarget.dataset.id)
       let contextMenuInfo = {target: e.currentTarget, targetRow: rowId, x: e.clientX, y: e.clientY}
       this.setState({contextMenu : contextMenuInfo, highlightedRow: rowId, clickedRow : null, renamingFile: null, newFileName: ""})
@@ -95,8 +96,10 @@ export default class Window extends React.Component {
 
   selectFileset = e => {
     if(e.currentTarget.id !== this.state.activeContent){
-    this.setState({history : [...this.state.history, this.state.activeContent],
-      clickedRow : null, highlightedRow: null, sortBy : null, search : "", renamingFile: null, newFileName: ""})}
+      let newHistory = Object.assign(this.state.history)
+      newHistory.back = [...this.state.history.back, this.state.activeContent]
+      this.setState({history: newHistory, clickedRow: null, highlightedRow: null, sortBy : null, search : "", renamingFile: null, newFileName: ""})
+    }
     this.setState({activeContent: e.currentTarget.id, sortBy : null})
   }
 
@@ -113,42 +116,37 @@ export default class Window extends React.Component {
     }
   }
 
-  historyBack = () => {
-    if (this.state.history.length > 0){
-      let newHistory = [...this.state.history]
-      let lastItem = newHistory.splice(newHistory.length-1,1)[0]
-      this.setState({history : newHistory, future: [...this.state.future, this.state.activeContent], activeContent : lastItem, clickedRow : null, search : "", renamingFile: null, newFileName: ""})
+  updateHistory = (direction) => {
+    let currentHistory = Object.assign(this.state.history)
+    let directionHistory = currentHistory[direction]
+    if(directionHistory.length > 0){
+      let nextItem = directionHistory.pop()
+      if(direction === 'back'){
+        currentHistory = {back: directionHistory, forward: [...this.state.history.forward, this.state.activeContent]}
+      }if(direction === 'forward'){
+        currentHistory = {back: [...this.state.history.back, this.state.activeContent], forward: directionHistory}
+      }
+      this.setState({history: currentHistory, activeContent: nextItem, clickedRow : null, search : "", renamingFile: null, newFileName: ""})
     }
   }
 
-  historyForward = () => {
-    if (this.state.future.length > 0){
-      let newFuture = [...this.state.future]
-      let nextItem = newFuture.splice(newFuture.length-1,1)[0]
-      this.setState({future : newFuture, history: [...this.state.history, this.state.activeContent], activeContent : nextItem, clickedRow : null, search : "", renamingFile: null, newFileName: ""})
-    }
-  }
-
-  mobileVersion = () => {
-    return this.state.width < 500
-  }
 
   focusBlur = e => {
-    this.setState({focused : e.type === 'focus'})
+    let windowState = Object.assign(this.state.window)
+    windowState.focused = e.type === 'focus'
+    this.setState({window: windowState})
     if (!this.state.focused){
       this.setState({contextMenu: null, highlightedRow: null})
     }
   }
 
-
-
   renderContents = () => {
     if (this.state.folders.length !== 0) {
       document.addEventListener("keydown", this.handleKeydown)
       return <div className="window-container" onClick={this.clearContextMenu} onContextMenu={this.clearContextMenu}>
-        <Topbar data={this.state} historyBack={this.historyBack} historyForward={this.historyForward} handleSearch={this.handleSearch} mobileVersion={this.mobileVersion}/>
-        <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} mobileVersion={this.mobileVersion} handleNameChange={this.handleNameChange}/>
-        <Sidebar data={this.state} selectFileset={this.selectFileset} mobileVersion={this.mobileVersion}/>
+        <Topbar data={this.state} updateHistory={this.updateHistory} handleSearch={this.handleSearch}/>
+        <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} handleNameChange={this.handleNameChange}/>
+        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
         {this.state.contextMenu ? <ContextMenu info={this.state.contextMenu} renameFile={this.renameFile}/> : null}
       </div> }
     else { return null }

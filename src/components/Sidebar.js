@@ -21,17 +21,10 @@ export default class Sidebar extends React.Component {
         </li>
     })
   }
-  renderMobileVersion = () => {
-    if(this.props.mobileVersion()){
-      return {display: 'none'}
-    }else{
-      return {display : null}
-    }
-  }
 
   render(){
     return(
-      <div className="sidebar" style={this.renderMobileVersion()}>
+      <div className="sidebar">
         <h5>Favorites</h5>
         <ul>{this.renderSidebar()}</ul>
       </div>

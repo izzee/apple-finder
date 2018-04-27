@@ -135,7 +135,7 @@ body{
 }
 .sidebar h5{
   font-size: 11px;
-  font-weight: normal;
+  font-weight: 500;
   margin: 0;
   padding: 8px 0 4px 8px;
   color: #777777;
@@ -245,14 +245,14 @@ body{
   width: 10%;
 }
 .context-menu{
-  z-index: 10;
   border-radius: 4px;
-  background-color: rgba(245,245,245,.99);
   box-shadow: 0 1px 6px #4a4a4a;
+  background: rgba(240,240,240,.95);
   position: fixed;
 }
+
 .context-menu ul{
-  padding: 1px 0;
+  padding: 4px 0;
   margin: 0;
   list-style: none;
 }
@@ -262,7 +262,7 @@ body{
 }
 .context-menu li{
   font-size: 13px;
-  padding: 2px 18px;
+  padding: 2px 15px;
   margin: 4px 0;
 }
 .context-menu li:hover{

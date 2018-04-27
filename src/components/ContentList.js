@@ -53,18 +53,10 @@ export default class ContentList extends React.Component {
   }
 
   renderPlaceholderRows = () => {
-    let emptySpace = (Math.floor(((this.props.data.height*.7-76)/20) - this.sortRows().length))
+    let emptySpace = (Math.floor(((this.props.data.window.height*.7-76)/20) - this.sortRows().length))
     if (emptySpace > 0){
       let i=0;
       return [...Array(emptySpace)].map(row => { return <tr key={i++}><td></td><td></td><td></td><td></td></tr>})
-    }
-  }
-
-  renderMobileVersion = () => {
-    if(this.props.mobileVersion()){
-      return {gridColumn: '1/4', borderBottomLeftRadius: '5px', borderLeft: 'none'}
-    }else{
-      return {gridColumn : null, borderBottomLeftRadius: null, borderLeft: null}
     }
   }
 
@@ -78,7 +70,7 @@ export default class ContentList extends React.Component {
 
   render(){
     return(
-      <div className="content-list" style={this.renderMobileVersion()}>
+      <div className="content-list">
         <div className="header-table"><table><thead>
           <tr>
             <th onClick={this.props.selectSortBy}>

@@ -5,41 +5,28 @@ import TH from 'react-icons/lib/ti/th-large-outline'
 
 export default class Topbar extends React.Component {
 
-  checkHistory = () => {
-    if(this.props.data.history.length > 0){
-      return {color : '#808080'}
-    }else{
-      return null
+
+
+  historyButton = e => {
+    console.log(e.currentTarget.className)
+    if(e.currentTarget.className === 'back-button'){
+      this.props.updateHistory('back')
+    }if(e.currentTarget.className === 'forward-button'){
+      this.props.updateHistory('forward')
     }
   }
 
-  checkFuture = () => {
-    if (this.props.data.future.length > 0){
-      return {color : '#808080'}
-    }else{
-      return null
-    }
-  }
-
-  renderMobileVersion = () => {
-    if(this.props.mobileVersion()){
-      return {gridColumn: '1/4'}
-    }else{
-      return {gridColumn : null}
-    }
+  historyButtonStyle = (direction) => {
+    return this.props.data.history[direction].length > 0 ? {color : '#808080'} : null
   }
 
   blurStyling = () => {
-    if(!this.props.data.focused){
-      return {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'}
-    }else{
-      return {background: null, color: null, boxShadow: null}
-    }
+    return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : null
   }
 
   render(){
     return(
-      <div className="topbar" style={this.renderMobileVersion(), this.blurStyling()}>
+      <div className="topbar" style={this.blurStyling()}>
           <div className="left-buttons">
             <div className="close-button" style={this.blurStyling()}></div>
             <div className="min-button" style={this.blurStyling()}></div>
@@ -47,8 +34,8 @@ export default class Topbar extends React.Component {
           </div>
           <div className="topbar-title">{this.props.data.search ? 'Searching...' : this.props.data.activeContent}</div>
           <div className="forward-back">
-            <div className="back-button" onClick={this.props.historyBack} style={this.checkHistory()}><ChevronLeft/></div>
-            <div className="forward-button" onClick={this.props.historyForward} style={this.checkFuture()}><ChevronRight/></div>
+            <div className="back-button" onClick={this.historyButton} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
+            <div className="forward-button" onClick={this.historyButton} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
           </div>
           {/* <nav className="view-options">
             <div><TH/></div>

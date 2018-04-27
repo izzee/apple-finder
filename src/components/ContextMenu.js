@@ -19,17 +19,19 @@ export default class ContextMenu extends React.Component {
 
   render(){
     return(
-      <div className="context-menu" style={this.setPosition()}>
-        <ul>
-          <li onClick={this.handleClick}>Open</li>
-          <hr></hr>
-          <li onClick={this.handleClick}>Rename</li>
-          <li onClick={this.handleClick}>Download</li>
-          <li onClick={this.handleClick}>Copy Link</li>
-          <hr></hr>
-          <li onClick={this.handleClick}>Move to Trash</li>
-        </ul>
-      </div>
+        <div className="context-menu" style={this.setPosition()}>
+            <ul>
+              <li onClick={this.handleClick}>Open</li>
+              <hr></hr>
+              <li onClick={this.handleClick}>Rename</li>
+              <li onClick={this.handleClick}>Download</li>
+              <li onClick={this.handleClick}>Copy Link</li>
+              <hr></hr>
+              <li onClick={this.handleClick}>Move to Trash</li>
+            </ul>
+
+        </div>
+
     )
   }
 }
