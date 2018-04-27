@@ -7,26 +7,15 @@ import ChevronDown from 'react-icons/lib/fa/chevron-down';
 export default class ContentList extends React.Component {
 
   upOrDown = (category) => {
-    if(category === this.props.data.sortBy){
-      if(this.props.data.ascending){ return <ChevronUp/>} else { return <ChevronDown/> }
+    if(category === this.props.data.sorted.by){
+      return this.props.data.sorted.ascending ? <ChevronUp/> : <ChevronDown/>
     }
   }
 
-  searchRows = () => {
-    let filtered = []
-    let folders = this.props.data.folders
-    let search = this.props.data.search
-    folders.forEach(folder => {folder.documents.forEach(doc => {
-      if(doc.name.toLowerCase().includes(search)){filtered.push(doc)}
-    })})
-    return filtered
-  }
-
   sortRows = () => {
-    let asc = this.props.data.ascending
-    let folders = this.props.data.folders.find(folder => folder.name === this.props.data.activeContent).documents
-    if(this.props.data.search){folders = this.searchRows()}
-    switch(this.props.data.sortBy) {
+    let asc = this.props.data.sorted.ascending
+    let folders = this.props.data.activeFileset.documents
+    switch(this.props.data.sorted.by) {
       case 'Name':
         return [...folders].sort((a,b) => {
           if(a.name > b.name){if(asc){return 1}else{return -1}}

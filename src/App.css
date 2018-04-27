@@ -72,7 +72,7 @@ body{
   top: 25px; left: 6px;
   color: #c6c6c6;
 }
-.back-button, .forward-button{
+.back, .forward{
   display: inline-block;
   width: 24px; height: 21px;
   background-color: #f2f2f2;

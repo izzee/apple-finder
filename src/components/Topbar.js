@@ -5,17 +5,6 @@ import TH from 'react-icons/lib/ti/th-large-outline'
 
 export default class Topbar extends React.Component {
 
-
-
-  historyButton = e => {
-    console.log(e.currentTarget.className)
-    if(e.currentTarget.className === 'back-button'){
-      this.props.updateHistory('back')
-    }if(e.currentTarget.className === 'forward-button'){
-      this.props.updateHistory('forward')
-    }
-  }
-
   historyButtonStyle = (direction) => {
     return this.props.data.history[direction].length > 0 ? {color : '#808080'} : null
   }
@@ -32,16 +21,11 @@ export default class Topbar extends React.Component {
             <div className="min-button" style={this.blurStyling()}></div>
             <div className="max-button" style={this.blurStyling()}></div>
           </div>
-          <div className="topbar-title">{this.props.data.search ? 'Searching...' : this.props.data.activeContent}</div>
+          <div className="topbar-title">{this.props.data.search ? 'Searching...' : this.props.data.activeFileset.name}</div>
           <div className="forward-back">
-            <div className="back-button" onClick={this.historyButton} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
-            <div className="forward-button" onClick={this.historyButton} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
+            <div className="back" onClick={this.props.updateHistory} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
+            <div className="forward" onClick={this.props.updateHistory} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
           </div>
-          {/* <nav className="view-options">
-            <div><TH/></div>
-            <div></div>
-            <div></div>
-          </nav> */}
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>
           </form>

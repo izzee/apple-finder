@@ -3,7 +3,7 @@ import React from 'react'
 export default class Sidebar extends React.Component {
 
   checkIfSelected = (folder) => {
-    if(this.props.data.activeContent === folder.name){
+    if(this.props.data.activeFileset.name === folder.name){
       return {backgroundColor: '#d8dfe8'}
     }else {
       return {backgroundColor: null}
