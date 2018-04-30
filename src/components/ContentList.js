@@ -50,11 +50,7 @@ export default class ContentList extends React.Component {
   }
 
   preventScroll = () =>{
-    if(this.props.data.contextMenu){
-      return {overflow: 'hidden'}
-    }else{
-      return {overflow: null}
-    }
+    return this.props.data.contextMenu.target ? {overflow: 'hidden'} : {overflow: null}
   }
 
   render(){

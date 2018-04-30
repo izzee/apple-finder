@@ -1,7 +1,7 @@
 import React from 'react'
-import ChevronLeft from 'react-icons/lib/md/chevron-left'
-import ChevronRight from 'react-icons/lib/md/chevron-right';
-import TH from 'react-icons/lib/ti/th-large-outline'
+import ChevronLeft from 'react-icons/lib/io/ios-arrow-back'
+import ChevronRight from 'react-icons/lib/io/ios-arrow-forward'
+import Upload from 'react-icons/lib/io/plus'
 
 export default class Topbar extends React.Component {
 
@@ -10,12 +10,16 @@ export default class Topbar extends React.Component {
   }
 
   blurStyling = () => {
-    return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : null
+    return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : {background: null, color: null, boxShadow: null}
+  }
+
+  testUpload=()=>{
+    console.log('upload')
   }
 
   render(){
     return(
-      <div className="topbar" style={this.blurStyling()}>
+      <div className="topbar">
           <div className="left-buttons">
             <div className="close-button" style={this.blurStyling()}></div>
             <div className="min-button" style={this.blurStyling()}></div>
@@ -26,6 +30,7 @@ export default class Topbar extends React.Component {
             <div className="back" onClick={this.props.updateHistory} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
             <div className="forward" onClick={this.props.updateHistory} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
           </div>
+          <div className="upload-botton" onClick={this.testUpload}><Upload /></div>
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>
           </form>

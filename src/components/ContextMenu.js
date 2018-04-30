@@ -3,10 +3,10 @@ import React from 'react'
 export default class ContextMenu extends React.Component {
   //
   setPosition = () => {
-    if (this.props.info){
+    if (this.props.info.target){
       return {display: 'block', left: this.props.info.x-2, top: this.props.info.y-2, opacity: '1'}
     }else{
-      return {display: null, left:null, top: null, opacity: null}
+      return {display: 'none', left: null, top: null, opacity: null}
     }
 
   }

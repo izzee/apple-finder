@@ -4,7 +4,6 @@ html{
   height: 100%;
   overflow: hidden;
 }
-
 body{
   color: #3b393b;
   font-size: 12px;
@@ -12,7 +11,6 @@ body{
   user-select: none;
   font-family: 'Roboto', sans-serif;
 }
-
 .window-container{
   position: relative;
   margin: 15vh 15vw;
@@ -47,17 +45,14 @@ body{
   border-radius: 12px;
 }
 .left-buttons .close-button{
-  /* border: 1px solid #bf3635; */
   box-shadow: 0 0 1px #662829 inset;
   background-color: #fc615d;
 }
 .left-buttons .min-button{
-  /* border: 1px solid #c88514; */
   box-shadow: 0 0 1px #544317 inset;
   background-color: #fecb35;
 }
 .left-buttons .max-button{
-  /* border: 1px solid #188624; */
   box-shadow: 0 0 1px #123c18 inset;
   background-color: #34c749;
 }
@@ -79,29 +74,21 @@ body{
   border: 1px solid #c1bfc1;
   border-radius: 5px;
   font-size: 20px;
-  line-height: 20px;
+  line-height: 18px;
   text-align: center;
 }
-.view-options{
+.upload-botton{
+  color: #808080;
   position: absolute;
-
-  left: 150px; top: 25px;
-  width:96px; height: 21px;
-  background-color: #fdfcfd;
+  top: 25px;
+  left: 66px;
+  font-size: 16px;
+  text-align: center;
+  line-height: 20px;
+  width: 24px; height: 21px;
+  background-color: #f2f2f2;
   border: 1px solid #c1bfc1;
-  background-color: #fcfbfc;
   border-radius: 5px;
-}
-.view-options div{
-  padding: 3px;
-  height: 4px;
-
-}
-.view-options svg{
-  align-self: center;
-  font-size: 10px;
-  color: #525252;
-
 }
 .search-field{
   position: absolute;
@@ -226,7 +213,6 @@ body{
   color: #8c8c8c;
   height: 20px;
 }
-
 .body-table tr:nth-child(1){
   border: 2px solid rgba(0,0,0,0);
 }
@@ -247,10 +233,9 @@ body{
 .context-menu{
   border-radius: 4px;
   box-shadow: 0 1px 6px #4a4a4a;
-  background: rgba(240,240,240,.95);
+  background: rgba(240,240,240,.99);
   position: fixed;
 }
-
 .context-menu ul{
   padding: 4px 0;
   margin: 0;
