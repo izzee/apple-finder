@@ -80,7 +80,7 @@ export default class Window extends React.Component {
 
   renameFile = () => {
     let context = this.state.contextMenu
-    this.setState({clickedRow: context.targetRow, renamingFile: this.state.contextMenu.target})
+    this.setState({ clickedRow: context.targetRow, renamingFile: this.state.contextMenu.target})
   }
 
   handleNameChange = (e) => {
@@ -92,7 +92,7 @@ export default class Window extends React.Component {
     let newName = this.state.newFileName
     let currentName = updateFileset.documents[this.state.clickedRow].name
     let document = {name: newName.length > 0 ? newName : currentName }
-    updateFileset.documents[this.state.clickedRow].name = document.name
+    updateFileset.documents.find(file => file.id === this.state.renamingFile).name = document.name
       fetch(URL+'documents/'+this.state.renamingFile, {
         method: 'PATCH',
         headers: { 'Accept': 'application/json', 'Content-Type': 'application/json'},
@@ -113,7 +113,7 @@ export default class Window extends React.Component {
   selectRow = (e) => {
     let id = parseInt(e.currentTarget.dataset.id, 10)
     if (id === this.state.clickedRow){ console.log('2x clicked') }
-    else{ this.setState({clickedRow: id, }) }
+    else{ this.setState({clickedRow: id}) }
   }
 
   selectSortBy = (e) => {
@@ -121,7 +121,7 @@ export default class Window extends React.Component {
     let newSorted = Object.assign({}, this.state.sorted)
     if (newSorted.by === category){ newSorted.ascending = !newSorted.ascending }
     else{ newSorted.by = category }
-    this.setState({sorted: newSorted, clickedRow : null})
+    this.setState({sorted: newSorted, clickedRow : null, renamingFile: null})
   }
 
   handleSearch = (e) => {

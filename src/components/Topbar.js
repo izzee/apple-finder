@@ -30,7 +30,7 @@ export default class Topbar extends React.Component {
             <div className="back" onClick={this.props.updateHistory} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
             <div className="forward" onClick={this.props.updateHistory} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
           </div>
-          <div className="upload-botton" onClick={this.testUpload}><Upload /></div>
+          <a className="upload-botton" onClick={this.testUpload}><Upload /></a>
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>
           </form>

@@ -90,6 +90,10 @@ body{
   border: 1px solid #c1bfc1;
   border-radius: 5px;
 }
+.upload-botton:active{
+  color: #4c4c4c;
+  background-color: #dddddd;
+}
 .search-field{
   position: absolute;
   right: 6px; top: 25px;
