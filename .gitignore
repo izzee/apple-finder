@@ -18,3 +18,12 @@
 
 npm-debug.log*
 yarn-debug.log*
+
+#awsmobilejs
+appsync-info.json
+aws-info.json
+project-info.json
+keys.js
+awsmobilejs/.awsmobile/backend-build
+awsmobilejs/\#current-backend-info
+~awsmobilejs-*/

@@ -29,9 +29,7 @@ export default class ContextMenu extends React.Component {
               <hr></hr>
               <li onClick={this.handleClick}>Move to Trash</li>
             </ul>
-
         </div>
-
     )
   }
 }

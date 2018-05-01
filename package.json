@@ -3,12 +3,11 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "filestack-js": "^0.11.4",
     "react": "^16.3.2",
     "react-dom": "^16.3.2",
     "react-icons": "^2.2.7",
     "react-input-autosize": "^2.2.1",
-    "react-ionicons": "^2.1.6",
-    "react-s3-uploader": "^4.8.0",
     "react-scripts": "1.1.4"
   },
   "scripts": {
@@ -16,8 +15,5 @@
     "build": "react-scripts build",
     "test": "react-scripts test --env=jsdom",
     "eject": "react-scripts eject"
-  },
-  "devDependencies": {
-    "browserify-css": "^0.14.0"
   }
 }

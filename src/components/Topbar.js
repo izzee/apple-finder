@@ -3,18 +3,24 @@ import ChevronLeft from 'react-icons/lib/io/ios-arrow-back'
 import ChevronRight from 'react-icons/lib/io/ios-arrow-forward'
 import Upload from 'react-icons/lib/io/plus'
 
+
 export default class Topbar extends React.Component {
 
-  historyButtonStyle = (direction) => {
-    return this.props.data.history[direction].length > 0 ? {color : '#808080'} : null
+  buttonStyle = (direction) => {
+    return this.props.data.history[direction].length > 0 ? 'active' : 'inactive'
   }
 
   blurStyling = () => {
     return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : {background: null, color: null, boxShadow: null}
   }
 
-  testUpload=()=>{
-    console.log('upload')
+  handleChange = (e) => {
+    e.preventDefault()
+    console.log(e);
+  }
+
+  handleUploadClick = () => {
+    document.getElementById('getFile').click()
   }
 
   render(){
@@ -27,10 +33,13 @@ export default class Topbar extends React.Component {
           </div>
           <div className="topbar-title">{this.props.data.search ? 'Searching...' : this.props.data.activeFileset.name}</div>
           <div className="forward-back">
-            <div className="back" onClick={this.props.updateHistory} style={this.historyButtonStyle('back')}><ChevronLeft/></div>
-            <div className="forward" onClick={this.props.updateHistory} style={this.historyButtonStyle('forward')}><ChevronRight/></div>
+            <a className={this.buttonStyle('back')} id="back" onClick={this.props.updateHistory}><ChevronLeft/></a>
+            <a className={this.buttonStyle('forward')} id="forward" onClick={this.props.updateHistory}><ChevronRight/></a>
           </div>
-          <a className="upload-botton" onClick={this.testUpload}><Upload /></a>
+          <form>
+            <input id="getFile" type="file" style={{display: 'none'}} onChange={this.props.uploadButton}></input>
+          </form>
+          <a className="upload-botton active" onClick={this.handleUploadClick}><Upload /></a>
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>
           </form>
