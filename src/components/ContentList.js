@@ -18,16 +18,22 @@ export default class ContentList extends React.Component {
     switch(this.props.data.sorted.by) {
       case 'Name':
         return [...folders].sort((a,b) => {
-          if(a.name > b.name){if(asc){return 1}else{return -1}}
-          if(a.name < b.name){if(asc){return -1}else{return 1}}
+          if(a.name > b.name){return asc ? 1 : -1}
+          if(a.name < b.name){return asc ? -1 : 1}
           else{ return 0 }
         })
-      // case 'Date Modified':
-      //   return folders.sort((a,b) => {
-      //     if(a.dateModified > b.dateModified){if(asc){ return 1 }else{ return -1}}
-      //     if(a.dateModified < b.dateModified){if(asc){ return -1 }else{return 1}}
-      //     else{ return 0 }
-      //   })
+      case 'Date Modified':
+        return folders.sort((a,b) => {
+          if(a.updated_at > b.updated_at){return asc ? 1 : -1}
+          if(a.updated_at < b.updated_at){return asc ? -1 : 1}
+          else{ return 0 }
+        })
+      case 'Size':
+        return folders.sort((a,b) => {
+          if(a.size > b.size){return asc ? 1 : -1}
+          if(a.size < b.size){return asc ? -1 : 1}
+          else{ return 0 }
+        })
       default:
         return folders;
     }
@@ -46,11 +52,12 @@ export default class ContentList extends React.Component {
     if (emptySpace > 0){
       let i=0;
       return [...Array(emptySpace)].map(row => { return <tr key={i++}><td></td><td></td><td></td><td></td></tr>})
-    }
+    }else{ return false }
   }
 
   preventScroll = () =>{
-    return this.props.data.contextMenu.target ? {overflow: 'hidden'} : {overflow: null}
+    return (this.props.data.contextMenu.target || this.renderPlaceholderRows()) ?
+     {overflow: 'hidden'} : {overflow: null}
   }
 
   render(){
@@ -70,9 +77,9 @@ export default class ContentList extends React.Component {
               <span style={{fontWeight: this.upOrDown('Size') ? '500' : null}}>Size</span>
               <span className="header-border">{this.upOrDown('Size')}</span>
             </th>
-            <th onClick={this.props.selectSortBy}>
-              <span style={{fontWeight: this.upOrDown('Kind') ? '500' : null}}>Kind</span>
-              <span className="header-border">{this.upOrDown('Kind')}</span>
+            <th>
+              <span>Kind</span>
+              <span className="header-border"></span>
             </th>
           </tr>
         </thead></table></div>

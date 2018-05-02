@@ -1,4 +1,6 @@
 import React from 'react'
+import docicon from '../icons/docs.png'
+import picicon from '../icons/pics.png'
 
 export default class Sidebar extends React.Component {
 
@@ -10,6 +12,14 @@ export default class Sidebar extends React.Component {
     }
   }
 
+  selectFolderIcon = (id) => {
+  //   if(id === 1){
+  //     return <img src={docicon}></img>
+  //   })
+  //
+  //   console.log(id)
+}
+
   renderSidebar = () => {
     return this.props.data.folders.map(folder => {
       return <li
@@ -17,6 +27,7 @@ export default class Sidebar extends React.Component {
         id={folder.name}
         onClick={this.props.selectFileset}
         style={this.checkIfSelected(folder)}>
+          {this.selectFolderIcon(folder.id)}
           {folder.name}
         </li>
     })

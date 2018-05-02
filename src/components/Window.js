@@ -7,7 +7,6 @@ import Filestack from 'filestack-js'
 import keys from '../keys'
 const URL = 'http://localhost:3000/api/v1/'
 const defaultContextMenu = {target: null, targetRow: null, x: null, y: null}
-const defaultUploadingFile = {name: "", fileUrl: "", file: null}
 
 
 export default class Window extends React.Component {
@@ -17,15 +16,14 @@ export default class Window extends React.Component {
     this.state = {
       folders : [],
       search : "",
-      activeFileset : {},
+      activeFileset : null,
       clickedRow : null,
       history: {back: [], forward: []},
       sorted: {by: null, ascending: false},
       contextMenu: defaultContextMenu,
       window: {height: null, width: null, focused: true},
       renamingFile : null,
-      newFileName : "",
-      uploadingFile : defaultUploadingFile
+      newFileName : ""
     }
   }
 
@@ -50,13 +48,20 @@ export default class Window extends React.Component {
       this.setState({renamingFile: null, newFileName: "", highlightedRow: null})
     }
     let row = this.state.clickedRow
-    let allRows = document.getElementsByClassName('row')
+    console.log(row)
+    let allRows = this.state.activeFileset.documents
     if(row !== null){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
       if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
-      let activeRow = [...allRows].find(rowNum => {return parseInt(rowNum.dataset.id,10) === this.state.clickedRow})
-      activeRow.scrollIntoViewIfNeeded()
+      this.scrollToRow(row, false)
+      }
     }
+
+  scrollToRow = (rowId, smooth) => {
+    let rows = [...document.getElementsByClassName('row')]
+    let targetRow = rows.find(row => {return parseInt(row.dataset.id,10) === rowId})
+    if(smooth){targetRow.scrollIntoView({block: 'end', behavior: 'smooth'})
+    }else{targetRow.scrollIntoViewIfNeeded()}
   }
 
   onWindowClick = (e) => {
@@ -69,29 +74,42 @@ export default class Window extends React.Component {
   }
 
   uploadButton = (e) => {
-    const client = Filestack.init(keys.fs)
-    client.upload(e.target.files[0])
-    .then(res => this.setState({uploadingFile : res}))
-    .then(this.handleUpload)
+    this.setState({search : "", sort: {by: null, ascending: false}})
+    if(e.target.files[0]){
+      const client = Filestack.init(keys.fs)
+      client.upload(e.target.files[0])
+      .then(res => this.handleUpload(res))
+    }
   }
 
-  handleUpload = () => {
-    console.log(this.state.uploadingFile)
-    let fileInfo = this.state.uploadingFile
+  handleUpload = (res) => {
+    let fileInfo = res
     let folder_id = this.getFiletype(fileInfo.mimetype)
-    let document = {name: fileInfo.filename, file_url: fileInfo.url, filetype: fileInfo.mimetype, size: fileInfo.size, folder_id: 2}
+    let document = {name: fileInfo.filename, file_url: fileInfo.url, filetype: fileInfo.mimetype, size: fileInfo.size, folder_id: folder_id}
     fetch(URL + 'documents', {
       method: 'POST',
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
       body: JSON.stringify({document})
     })
+    .then(res => res.json()).then(res => this.renderNewUpload(res))
   }
 
   getFiletype = (filetype) => {
-    
+    if(filetype.includes('image')){return '2'}
+    else if(filetype.includes('audio')){return '3'}
+    else {return '1'}
   }
 
-
+  renderNewUpload = (doc) => {
+    let newFolders = [...this.state.folders]
+    let targetFolderId = doc.folder.id-1
+    newFolders[targetFolderId].documents.push(doc)
+    this.setState({folders: newFolders, activeFileset: newFolders[targetFolderId], uploadingFile: null})
+    let targetRow = newFolders[targetFolderId].documents.find(docu => docu.id === doc.id)
+    let targetRowId = newFolders[targetFolderId].documents.indexOf(targetRow)
+    this.scrollToRow(targetRowId, true)
+    this.setState({clickedRow: targetRowId})
+  }
 
   renderContextMenu = (e) => {
     e.preventDefault()
@@ -105,8 +123,10 @@ export default class Window extends React.Component {
 
   clearContextMenu = (e) => {
     e.preventDefault()
-    if(e.type === 'click' || e.target.parentNode.className !== 'row'){
-    this.setState({contextMenu: defaultContextMenu})
+    if(this.state.contextMenu.target){
+      if(e.type === 'click' || e.target.parentNode.className !== 'row'){
+      this.setState({contextMenu: defaultContextMenu})
+      }
     }
   }
 
@@ -144,7 +164,8 @@ export default class Window extends React.Component {
 
   selectRow = (e) => {
     let id = parseInt(e.currentTarget.dataset.id, 10)
-    if (id === this.state.clickedRow){ window.open(this.state.activeFileset.documents[id].file_url, '_blank') }
+    let url = this.state.activeFileset.documents[id].file_url
+    if (id === this.state.clickedRow && url){window.open(url,'_blank')}
     else{ this.setState({clickedRow: id}) }
   }
 
@@ -157,13 +178,16 @@ export default class Window extends React.Component {
   }
 
   handleSearch = (e) => {
-    let search = e.currentTarget.value
-    this.setState({search : e.currentTarget.value})
-    let filtered = {name: "", documents: []}
-    this.state.folders.forEach(folder => {folder.documents.forEach(doc => {
-      if(doc.name.toLowerCase().includes(search)){filtered.documents.push(doc)}
-    })})
-    this.setState({activeFileset: filtered, clickedRow : null})
+    let search = e.currentTarget.value.trim()
+    let filtered = [...this.state.folders][0]
+    if(this.state.activeFileset.name){ filtered = Object.assign({}, this.state.activeFileset)}
+    if(search.length > 0){
+      filtered = {name: "", documents: []}
+      this.state.folders.forEach(folder => {folder.documents.forEach(doc => {
+        if(doc.name.toLowerCase().includes(search)){filtered.documents.push(doc)}
+      })})
+    }
+    this.setState({search : e.currentTarget.value, activeFileset: filtered, clickedRow : null})
   }
 
   updateHistory = (e) => {

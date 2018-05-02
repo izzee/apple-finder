@@ -1,5 +1,9 @@
 import React from 'react'
 import AutosizeInput from 'react-input-autosize';
+import moment from 'moment'
+import formatBytes from 'format-bytes'
+
+
 
 export default class ContentRow extends React.Component {
 
@@ -39,7 +43,8 @@ export default class ContentRow extends React.Component {
     let fileType=this.props.fileInfo.filetype
     if(fileType){
       if(fileType.includes('image')){ return 'Image'}
-      if(fileType.includes('document')){ return 'Document'}
+      if(fileType.includes('document')
+      || fileType.includes('pdf')){ return 'Document'}
       if(fileType.includes('video')){return 'Video'}
       if(fileType.includes('audio')){return 'Audio'}
       else{return 'Other'}
@@ -48,17 +53,25 @@ export default class ContentRow extends React.Component {
 
   renderFileSize = () => {
     let fileSize = this.props.fileInfo.size
-    if(fileSize){ fileSize = this.props.fileInfo.size
-      if(fileSize > 100000){ return Math.round(fileSize/10000) + ' MB'}
-      else{ return Math.round(fileSize/1000) + ' KB'}}
-    return ('--')
+    return fileSize ? formatBytes(fileSize) : '--'
+  }
+
+  renderFileDate = () => {
+    let fileDate = this.props.fileInfo.updated_at
+    if (moment().format('D') === moment(fileDate).format('D')){
+      return moment(fileDate).format('[Today at] h:mm A');
+    }else if(moment().add(-1, 'days').format('D') === moment(fileDate).format('D')){
+      return moment(fileDate).format('[Yesterday at] h:mm A');
+    }else{
+      return moment(fileDate).format('MMM D, YYYY [at] h:mm A');
+    }
   }
 
   renderData = () => {
     return(
       <tr className={"row"} key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
-        <td style={this.tdStyling()}>{this.checkIfRenaming()}</td>
-        <td style={this.tdStyling()}>{this.props.fileInfo.updated_at.split('T')[0]}</td>
+        <td draggable="true" style={this.tdStyling()}>{this.checkIfRenaming()}</td>
+        <td style={this.tdStyling()}>{this.renderFileDate()}</td>
         <td style={this.tdStyling()}>{this.renderFileSize()}</td>
         <td style={this.tdStyling()}>{this.renderFileType()}</td>
       </tr>
