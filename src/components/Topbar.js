@@ -37,7 +37,7 @@ export default class Topbar extends React.Component {
             <a className={this.buttonStyle('forward')} id="forward" onClick={this.props.updateHistory}><ChevronRight/></a>
           </div>
           <form>
-            <input id="getFile" type="file" style={{display: 'none'}} onChange={this.props.uploadButton}></input>
+            <input id="getFile" type="file" accept={'image/*, audio/mp3, text/txt'}style={{display: 'none'}} onChange={this.props.uploadButton}></input>
           </form>
           <a className="upload-botton active" onClick={this.handleUploadClick}><Upload /></a>
           <form>

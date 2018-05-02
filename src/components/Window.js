@@ -78,13 +78,19 @@ export default class Window extends React.Component {
   handleUpload = () => {
     console.log(this.state.uploadingFile)
     let fileInfo = this.state.uploadingFile
-    let document = {name: fileInfo.filename, image: fileInfo.url, folder_id: 2}
+    let folder_id = this.getFiletype(fileInfo.mimetype)
+    let document = {name: fileInfo.filename, file_url: fileInfo.url, filetype: fileInfo.mimetype, size: fileInfo.size, folder_id: 2}
     fetch(URL + 'documents', {
       method: 'POST',
       headers: {'Accept': 'application/json', 'Content-Type': 'application/json'},
       body: JSON.stringify({document})
     })
   }
+
+  getFiletype = (filetype) => {
+    
+  }
+
 
 
   renderContextMenu = (e) => {
@@ -131,7 +137,6 @@ export default class Window extends React.Component {
     if(e.currentTarget.id !== this.state.activeFileset.name){
       let newHistory = Object.assign({}, this.state.history, {back: [...this.state.history.back, this.state.activeFileset]})
       let fileset = this.state.folders.find(folder => folder.name === e.currentTarget.id)
-
       this.setState({history: newHistory, activeFileset: fileset, clickedRow: null, sortBy : null, search : ""})
     }
     this.setState({sortBy: null})
@@ -139,7 +144,7 @@ export default class Window extends React.Component {
 
   selectRow = (e) => {
     let id = parseInt(e.currentTarget.dataset.id, 10)
-    if (id === this.state.clickedRow){ console.log('2x clicked') }
+    if (id === this.state.clickedRow){ window.open(this.state.activeFileset.documents[id].file_url, '_blank') }
     else{ this.setState({clickedRow: id}) }
   }
 
