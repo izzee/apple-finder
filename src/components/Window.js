@@ -48,7 +48,6 @@ export default class Window extends React.Component {
       this.setState({renamingFile: null, newFileName: "", highlightedRow: null})
     }
     let row = this.state.clickedRow
-    console.log(row)
     let allRows = this.state.activeFileset.documents
     if(row !== null){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
@@ -66,9 +65,48 @@ export default class Window extends React.Component {
 
   onWindowClick = (e) => {
     if(e.target.type !== 'file'){
+      e.preventDefault()
       this.clearContextMenu(e)
       if(this.state.renamingFile){
         this.setNewFilename()
+      }
+    }
+  }
+
+  renderContextMenu = (e) => {
+    e.preventDefault()
+    let target = e.currentTarget.className
+    let contextMenuInfo = defaultContextMenu
+    if(this.state.window.focused){
+      if(target === 'row'){contextMenuInfo = this.renderDocMenu(e)}
+      if(target === 'placeholderRow'){contextMenuInfo = this.renderFolderMenu(e)}
+      this.setState({contextMenu: contextMenuInfo, clickedRow: null})
+    }
+  }
+
+  renderDocMenu = (e) => {
+    let targetId = parseInt(e.currentTarget.id, 10)
+    let rowId = parseInt(e.currentTarget.dataset.id,10)
+    return {target: targetId, targetRow: rowId, type: 'document', x: e.clientX, y: e.clientY}
+  }
+
+  renderFolderMenu = (e) => {
+    return {target: 'folder', x: e.clientX, y: e.clientY}
+  }
+
+  renderSecondaryMenu = (e) => {
+    let newContextState = Object.assign({}, this.state.contextMenu)
+    if(e.type === 'mouseenter'){
+      newContextState.secondary = e.target.innerText
+      this.setState({contextMenu: newContextState})
+    }
+  }
+
+  clearContextMenu = (e) => {
+    e.preventDefault()
+    if(this.state.contextMenu.target){
+      if(e.type === 'click' || e.target.parentNode.className !== 'row'){
+      this.setState({contextMenu: defaultContextMenu})
       }
     }
   }
@@ -109,25 +147,6 @@ export default class Window extends React.Component {
     let targetRowId = newFolders[targetFolderId].documents.indexOf(targetRow)
     this.scrollToRow(targetRowId, true)
     this.setState({clickedRow: targetRowId})
-  }
-
-  renderContextMenu = (e) => {
-    e.preventDefault()
-    if(this.state.window.focused){
-      let targetId = parseInt(e.currentTarget.id, 10)
-      let rowId = parseInt(e.currentTarget.dataset.id,10)
-      let contextMenuInfo = {target: targetId, targetRow: rowId, x: e.clientX, y: e.clientY}
-      this.setState({contextMenu: contextMenuInfo, clickedRow: null})
-    }
-  }
-
-  clearContextMenu = (e) => {
-    e.preventDefault()
-    if(this.state.contextMenu.target){
-      if(e.type === 'click' || e.target.parentNode.className !== 'row'){
-      this.setState({contextMenu: defaultContextMenu})
-      }
-    }
   }
 
   renameFile = () => {
@@ -210,18 +229,20 @@ export default class Window extends React.Component {
     windowState.focused = e.type === 'focus'
     this.setState({window: windowState})
     if (!this.state.focused){
-      this.setState(defaultContextMenu)
+      this.setState({contextMenu: defaultContextMenu})
     }
   }
 
   renderContents = () => {
     if (this.state.folders.length !== 0) {
       document.addEventListener("keydown", this.handleKeydown)
-      return <div className="window-container" onClick={this.onWindowClick} onContextMenu={this.onWindowClick}>
+      return <div className="window-container" onClick={this.onWindowClick}>
         <Topbar data={this.state} updateHistory={this.updateHistory} handleSearch={this.handleSearch} uploadButton={this.uploadButton}/>
         <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} handleNameChange={this.handleNameChange}/>
-        <Sidebar data={this.state} selectFileset={this.selectFileset}/>
-        {this.state.contextMenu ? <ContextMenu info={this.state.contextMenu} renameFile={this.renameFile}/> : null}
+        <Sidebar data={this.state} selectFileset={this.selectFileset} renderContextMenu={this.renderContextMenu}/>
+        {this.state.contextMenu ?
+          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} renameFile={this.renameFile} renderSecondaryMenu={this.renderSecondaryMenu}
+          selectSortBy={this.selectSortBy}/> : null}
       </div>}
     else { return null }
   }

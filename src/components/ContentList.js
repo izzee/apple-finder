@@ -19,20 +19,26 @@ export default class ContentList extends React.Component {
       case 'Name':
         return [...folders].sort((a,b) => {
           if(a.name > b.name){return asc ? 1 : -1}
-          if(a.name < b.name){return asc ? -1 : 1}
-          else{ return 0 }
+          else if(a.name < b.name){return asc ? -1 : 1}
+          else if(a.id > b.id){return asc ? 1 : -1}
+          else if(a.id < b.id){return asc ? -1 : 1}
+          else{return 0}
         })
       case 'Date Modified':
         return folders.sort((a,b) => {
           if(a.updated_at > b.updated_at){return asc ? 1 : -1}
-          if(a.updated_at < b.updated_at){return asc ? -1 : 1}
-          else{ return 0 }
+          else if(a.updated_at < b.updated_at){return asc ? -1 : 1}
+          else if(a.id > b.id){return asc ? 1 : -1}
+          else if(a.id < b.id){return asc ? -1 : 1}
+          else{return 0}
         })
       case 'Size':
         return folders.sort((a,b) => {
           if(a.size > b.size){return asc ? 1 : -1}
-          if(a.size < b.size){return asc ? -1 : 1}
-          else{ return 0 }
+          else if(a.size < b.size){return asc ? -1 : 1}
+          else if(a.id > b.id){return asc ? 1 : -1}
+          else if(a.id < b.id){return asc ? -1 : 1}
+          else{return 0}
         })
       default:
         return folders;
@@ -51,7 +57,10 @@ export default class ContentList extends React.Component {
     let emptySpace = (Math.floor(((this.props.data.window.height*.7-76)/20) - this.sortRows().length))
     if (emptySpace > 0){
       let i=0;
-      return [...Array(emptySpace)].map(row => { return <tr key={i++}><td></td><td></td><td></td><td></td></tr>})
+      return [...Array(emptySpace)].map(row => {
+        return <tr key={i++} className="placeholderRow"
+          onContextMenu={this.props.renderContextMenu}>
+        <td></td><td></td><td></td><td></td></tr>})
     }else{ return false }
   }
 

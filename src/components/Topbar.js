@@ -14,10 +14,6 @@ export default class Topbar extends React.Component {
     return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : {background: null, color: null, boxShadow: null}
   }
 
-  handleChange = (e) => {
-    e.preventDefault()
-    console.log(e);
-  }
 
   handleUploadClick = () => {
     document.getElementById('getFile').click()
@@ -25,7 +21,7 @@ export default class Topbar extends React.Component {
 
   render(){
     return(
-      <div className="topbar">
+      <div className="topbar" style={this.blurStyling()}>
           <div className="left-buttons">
             <div className="close-button" style={this.blurStyling()}></div>
             <div className="min-button" style={this.blurStyling()}></div>

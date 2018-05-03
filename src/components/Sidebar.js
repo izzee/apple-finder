@@ -5,20 +5,15 @@ import picicon from '../icons/pics.png'
 export default class Sidebar extends React.Component {
 
   checkIfSelected = (folder) => {
-    if(this.props.data.activeFileset.name === folder.name){
-      return {backgroundColor: '#d8dfe8'}
-    }else {
+    if(this.props.data.contextMenu.targetRow === folder.name){
+      return {backgroundColor: null, border: '2px solid 365cc8', borderRadius: '5px'}
+    }
+    else if(this.props.data.activeFileset.name === folder.name){
+      return {backgroundColor: '#d8dfe8', border: '2px solid #d8dfe8'}
+    } else {
       return {backgroundColor: null}
     }
   }
-
-  selectFolderIcon = (id) => {
-  //   if(id === 1){
-  //     return <img src={docicon}></img>
-  //   })
-  //
-  //   console.log(id)
-}
 
   renderSidebar = () => {
     return this.props.data.folders.map(folder => {
@@ -26,8 +21,8 @@ export default class Sidebar extends React.Component {
         key={folder.id}
         id={folder.name}
         onClick={this.props.selectFileset}
+        onContextMenu={this.props.renderContextMenu}
         style={this.checkIfSelected(folder)}>
-          {this.selectFolderIcon(folder.id)}
           {folder.name}
         </li>
     })
@@ -35,9 +30,9 @@ export default class Sidebar extends React.Component {
 
   render(){
     return(
-      <div className="sidebar">
+      <div className="sidebar" onContextMenu={this.props.renderContextMenu}>
         <h5>Favorites</h5>
-        <ul>{this.renderSidebar()}</ul>
+        <ul className='folders'>{this.renderSidebar()}</ul>
       </div>
     )
   }

@@ -69,8 +69,8 @@ export default class ContentRow extends React.Component {
 
   renderData = () => {
     return(
-      <tr className={"row"} key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
-        <td draggable="true" style={this.tdStyling()}>{this.checkIfRenaming()}</td>
+      <tr className="row" key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
+        <td style={this.tdStyling()}>{this.checkIfRenaming()}</td>
         <td style={this.tdStyling()}>{this.renderFileDate()}</td>
         <td style={this.tdStyling()}>{this.renderFileSize()}</td>
         <td style={this.tdStyling()}>{this.renderFileType()}</td>

@@ -135,9 +135,17 @@ body{
   list-style: none;
 }
 .sidebar li{
-  padding-left: 15px;
+  border: 2px solid #f6f6f6;
+  box-sizing:border-box;
   height: 23px;
-  line-height: 23px;
+  line-height: 20px;
+  margin: 2px 0;
+  padding-left: 15px;
+}
+.sidebar img{
+  vertical-align: middle;
+  border: 1px solid black;
+  mix-blend-mode: multiply;
 }
 .content-list{
   grid-row: 2/3;
@@ -232,13 +240,13 @@ body{
 .header-table th:nth-child(3,4), .body-table td:nth-child(3,4){
   width: 10%;
 }
-.context-menu{
+.context-menu, .secondary-context-menu{
   border-radius: 4px;
   box-shadow: 0 1px 6px #4a4a4a;
   background: rgba(240,240,240,.99);
   position: fixed;
 }
-.context-menu ul{
+.context-menu ul, .secondary-context-menu ul{
   padding: 1px 0;
   margin: 0;
   list-style: none;
@@ -247,12 +255,24 @@ body{
   border: none;
   border-bottom: 1px solid #dfdfdf;
 }
-.context-menu li{
+.context-menu li, .secondary-context-menu li{
+  color: #3d3d3d;
+  width: 100px;
   font-size: 13px;
-  padding: 2px 15px;
+  padding: 2px 10px 2px 15px;
   margin: 4px 0;
 }
-.context-menu li:hover{
+.context-menu li:hover, .secondary-context-menu li:hover{
   background-color: #5296fa;
   color: white;
+}
+.context-menu svg {
+  font-size: 15px;
+  float: right;
+}
+.secondary-context-menu li{
+  padding: 2px 15px 2px 5px;
+}
+.secondary-context-menu span{
+  padding-left: 2px;
 }
