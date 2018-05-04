@@ -2,6 +2,10 @@ import React from 'react'
 import ChevronLeft from 'react-icons/lib/io/ios-arrow-back'
 import ChevronRight from 'react-icons/lib/io/ios-arrow-forward'
 import Upload from 'react-icons/lib/io/plus'
+import iconView from '../icons/icon.svg'
+import listView from '../icons/list-view.svg'
+import columnView from '../icons/column-view.svg'
+import ReactSVG from 'react-svg'
 
 
 export default class Topbar extends React.Component {
@@ -36,6 +40,12 @@ export default class Topbar extends React.Component {
             <input id="getFile" type="file" accept={'image/*, audio/mp3,wav, text/plain, application/pdf'}style={{display: 'none'}} onChange={this.props.uploadButton}></input>
           </form>
           <a className="upload-botton active" onClick={this.handleUploadClick}><Upload /></a>
+          <div className="view-mode-nav">
+            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={iconView}/>
+            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={listView}/>
+            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={columnView}/>
+
+          </div>
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>
           </form>

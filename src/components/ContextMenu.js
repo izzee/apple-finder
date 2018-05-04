@@ -16,6 +16,8 @@ export default class ContextMenu extends React.Component {
   handleClick = (e) => {
     if(e.currentTarget.innerText === 'Rename'){
       this.props.renameFile()
+    }if(e.currentTarget.innerText === 'Upload a File'){
+      document.getElementById('getFile').click()
     }
   }
 
@@ -30,8 +32,6 @@ export default class ContextMenu extends React.Component {
       return {display: 'block', left: this.props.info.x+123, top: this.props.info.y+53}
     }
   }
-
-
 
   hoverStyle = (target) => {
     return target === this.props.info.secondary ?
@@ -48,11 +48,21 @@ export default class ContextMenu extends React.Component {
     if(this.props.info.secondary === 'Arrange By'){
       return <ul>
         <li onClick={this.props.selectSortBy}>{this.checkMark('Name')}<span>Name</span></li>
-        <li onClick={this.props.selectSortBy}>{this.checkMark('Date Modified')}<span>Date Modified</span></li>
         <li onClick={this.props.selectSortBy}>{this.checkMark('Size')}<span>Size</span></li>
+        <li onClick={this.props.selectSortBy}>{this.checkMark('Date Modified')}<span>Date Modified</span></li>
+        <hr></hr>
         <li onClick={this.props.selectSortBy}>{this.checkMark('None')}<span>None</span></li>
       </ul>
+    }if(this.props.info.secondary === 'View'){
+      return <ul>
+        <li onClick={this.props.selectSortBy}>{this.checkMark('Icons')}<span>as Icons</span></li>
+        <li onClick={this.props.selectSortBy}>{this.checkMark('None')}<span>as List</span></li>
+        <li onClick={this.props.selectSortBy}>{this.checkMark('Columns')}<span>as Columns</span></li>
+      </ul>
     }
+  }
+  handleUploadClick = () => {
+
   }
 
   renderContextMenu = () => {
@@ -65,7 +75,7 @@ export default class ContextMenu extends React.Component {
         <li onMouseEnter={this.hoverSecondaryMenu} onMouseOut={this.hoverSecondaryMenu} style={this.hoverStyle('Arrange By')}>
           Arrange By<Arrow /></li>
         <hr></hr>
-        <li onMouseEnter={this.hoverSecondaryMenu}>Upload a File</li>
+        <li onMouseEnter={this.hoverSecondaryMenu} onClick={this.handleClick}>Upload a File</li>
       </ul>
     }else{
       return <ul>

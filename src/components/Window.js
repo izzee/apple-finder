@@ -18,6 +18,7 @@ export default class Window extends React.Component {
       search : "",
       activeFileset : null,
       clickedRow : null,
+      viewMode : 'list',
       history: {back: [], forward: []},
       sorted: {by: null, ascending: false},
       contextMenu: defaultContextMenu,
@@ -79,7 +80,7 @@ export default class Window extends React.Component {
     let contextMenuInfo = defaultContextMenu
     if(this.state.window.focused){
       if(target === 'row'){contextMenuInfo = this.renderDocMenu(e)}
-      if(target === 'placeholderRow'){contextMenuInfo = this.renderFolderMenu(e)}
+      if(target === 'placeholderRow' || e.target.className === 'sidebar'){contextMenuInfo = this.renderFolderMenu(e)}
       this.setState({contextMenu: contextMenuInfo, clickedRow: null})
     }
   }
@@ -241,8 +242,7 @@ export default class Window extends React.Component {
         <ContentList data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} handleNameChange={this.handleNameChange}/>
         <Sidebar data={this.state} selectFileset={this.selectFileset} renderContextMenu={this.renderContextMenu}/>
         {this.state.contextMenu ?
-          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} renameFile={this.renameFile} renderSecondaryMenu={this.renderSecondaryMenu}
-          selectSortBy={this.selectSortBy}/> : null}
+          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} renameFile={this.renameFile} renderSecondaryMenu={this.renderSecondaryMenu} selectSortBy={this.selectSortBy}/> : null}
       </div>}
     else { return null }
   }
