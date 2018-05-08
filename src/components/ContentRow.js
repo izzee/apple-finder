@@ -3,8 +3,6 @@ import AutosizeInput from 'react-input-autosize';
 import moment from 'moment'
 import formatBytes from 'format-bytes'
 
-
-
 export default class ContentRow extends React.Component {
 
   checkIfRenaming = () => {
@@ -68,14 +66,22 @@ export default class ContentRow extends React.Component {
   }
 
   renderData = () => {
-    return(
-      <tr className="row" key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
-        <td style={this.tdStyling()}>{this.checkIfRenaming()}</td>
-        <td style={this.tdStyling()}>{this.renderFileDate()}</td>
-        <td style={this.tdStyling()}>{this.renderFileSize()}</td>
-        <td style={this.tdStyling()}>{this.renderFileType()}</td>
-      </tr>
-    )
+    if(this.props.data.viewMode === 'listView'){
+      return(
+        <tr className="row" key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
+          <td style={this.tdStyling()}>{this.checkIfRenaming()}</td>
+          <td style={this.tdStyling()}>{this.props.reformattedInfo.updated}</td>
+          <td style={this.tdStyling()}>{this.props.reformattedInfo.size}</td>
+          <td style={this.tdStyling()}>{this.props.reformattedInfo.type}</td>
+        </tr>
+      )
+    }else if(this.props.data.viewMode === 'columnView'){
+      return(
+        <tr className="row" key={this.props.dataid} id={this.props.dataid} data-id={this.props.index} onClick={this.props.selectRow} onContextMenu={this.props.renderContextMenu} style={this.checkIfClicked()}>
+        <td style={this.tdStyling()}><div>{this.checkIfRenaming()}</div></td>
+        </tr>
+      )
+    }
   }
 
   render(){

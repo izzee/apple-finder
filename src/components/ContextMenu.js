@@ -40,7 +40,7 @@ export default class ContextMenu extends React.Component {
 
   checkMark = (target) => {
     if(!this.props.sorted.by && target === 'None'){ return <Check />}
-    return target === this.props.sorted.by ?
+    return target === this.props.sorted.by || target === this.props.viewMode ?
     <Check /> : <Check style={{visibility: 'hidden'}}/>
   }
 
@@ -55,9 +55,9 @@ export default class ContextMenu extends React.Component {
       </ul>
     }if(this.props.info.secondary === 'View'){
       return <ul>
-        <li onClick={this.props.selectSortBy}>{this.checkMark('Icons')}<span>as Icons</span></li>
-        <li onClick={this.props.selectSortBy}>{this.checkMark('None')}<span>as List</span></li>
-        <li onClick={this.props.selectSortBy}>{this.checkMark('Columns')}<span>as Columns</span></li>
+        <li id="iconView" onClick={this.props.selectViewMode}>{this.checkMark('iconView')}<span>as Icons</span></li>
+        <li id="listView" onClick={this.props.selectViewMode}>{this.checkMark('listView')}<span>as List</span></li>
+        <li id="columnView" onClick={this.props.selectViewMode}>{this.checkMark('columnView')}<span>as Columns</span></li>
       </ul>
     }
   }

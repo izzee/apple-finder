@@ -13,14 +13,14 @@ body{
 }
 .window-container{
   position: relative;
-  margin: 15vh 15vw;
-  width: 70vw; height: 70vh;
+  margin: 15vh auto;
+  width: 60vw; height: 70vh;
   background-color: white;
   box-shadow: 0 1px 5px #284762;
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 150px auto;
-  grid-template-rows: 53px auto;
+  grid-template-columns: 150px 1fr;
+  grid-template-rows: 53px 1fr;
 }
 .topbar{
   grid-row: 1/2;
@@ -98,7 +98,6 @@ body{
   position: absolute;
   top: 25px; left: 152px;
   width: 80px; height: 21px;
-  background-color: #f2f2f2;
   border: 1px solid #c1bfc1;
   border-radius: 5px;
 }
@@ -117,14 +116,20 @@ body{
   border-top-right-radius: 4px;
   border-bottom-right-radius: 4px;
 }
-.view-mode-nav div img{
-  color: pink;
-  display: block;
-  margin: 5px auto;
-  height: 12px;
+.svg-div{
+  background-color: #f2f2f2;
 }
-.svgDiv div{
-    border-left: none;
+.svg-div:active{
+  background-color:#dcdcdc;
+}
+.svg-div-clicked{
+  background-color: #727172;
+}
+.svg-div-clicked:active{
+  background-color: #545354;
+}
+.svg-div-clicked .topbar-icon{
+  color: white;
 }
 .topbar-icon {
   transform: translate(1px, 5px);
@@ -137,12 +142,6 @@ body{
   stroke: currentColor;
   fill: none;
   color: #737373;
-}
-.topbar-icon:active{
-  color: #4c4c4c;
-}
-.svgDiv:active{
-  background-color:#dcdcdc;
 }
 .search-field{
   position: absolute;
@@ -169,7 +168,7 @@ body{
 }
 .sidebar{
   grid-column:1/2;
-  grid-row: 2;
+  grid-row: 2/3;
   background-color: #f6f6f6;
   border-right: 1px solid #dfdfdf;
   border-bottom-left-radius: 5px;
@@ -219,8 +218,6 @@ body{
   padding-left: 10px;
   font-weight: normal;
   background-color: #f0f0f0;
-  text-overflow: clip;
-  overflow: hidden;
 }
 .header-table th:active{
   background-color: #eaeaea;
@@ -292,6 +289,120 @@ body{
 }
 .header-table th:nth-child(3,4), .body-table td:nth-child(3,4){
   width: 10%;
+}
+.column-view-container{
+  grid-column: 2/3;
+  grid-row: 2/3;
+  padding-bottom: 0;
+  overflow: hidden;
+  position: relative;
+
+}
+.column-view-container .body-table{
+  padding-right: 2px;
+  position: absolute;
+  width: 30%;
+  overflow: scroll;
+  display: flex;
+  flex-direction: column;
+}
+.column-view-container .body-table tr{
+
+  width: 30%;
+  background-color: rgba(0,0,0,0);
+  border: 2px solid rgba(0,0,0,0);
+}
+.column-view-container .body-table td{
+  max-width: 0;
+}
+.column-view-container .body-table td div{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-height: 14px;
+}
+.column-view-preview{
+  margin-left: 2px;
+  position:absolute;
+  text-align: center;
+  width: 70%; height: 100%;
+  left: 30%;
+  border-left: 1px solid #e0e0e0;
+}
+.column-view-preview img{
+  border: 1px solid #e0e0e0;
+  height: 60%;
+  display: block;
+  margin: 25px auto 0 auto;
+}
+.column-view-preview h3{
+  margin-top: 10px;
+  font-weight: 400;
+  font-size: 18px;
+}
+.column-view-preview p{
+  color: #9f9f9f;
+  margin: 2px;
+}
+.column-view-preview table{
+  margin: auto;
+}
+.column-view-preview tr td:nth-child(1){
+  padding-right: 5px;
+  text-align: right;
+  color: #9f9f9f;
+}
+.column-view-preview tr td:nth-child(2){
+  text-align: left;
+}
+.cv-file-info{
+  position: absolute;
+  width: 100%;
+  bottom: 25px;
+}
+.cv-audio-preview{
+  position: relative;
+  background-color: white;
+  margin: auto;
+  width: 50%;
+}
+.play-button{
+  display: none;
+  border: 3px solid white;
+  background-color: rgba(20,20,20,.85);
+  box-shadow: 0 0 10px 2px rgba(20,20,20,.85);
+  width: 30px; height: 30px;
+  border-radius: 50px;
+  position: absolute;
+  top: 50%; left: 50%;
+  transform:translate(-15px, -15px);
+}
+.play-button svg{
+  text-align: center;
+  margin: 2px;
+  width: 26px; height: 26px;
+  border-radius: 50px;
+  color: white;
+}
+.play-button:hover{
+  cursor: pointer;
+}
+#play-svg{
+  display: block;
+  transform: translateX(2px);
+}
+#pause-svg{
+  display: none;
+}
+.cv-audio-preview img{
+  width: 100%;
+}
+.cv-audio-preview:hover .play-button{
+  display:block;
+}
+
+.context-menu-target{
+  flex:1;
+  width: 100%;
 }
 .context-menu, .secondary-context-menu{
   border-radius: 4px;

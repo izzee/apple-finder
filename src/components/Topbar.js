@@ -6,18 +6,23 @@ import iconView from '../icons/icon.svg'
 import listView from '../icons/list-view.svg'
 import columnView from '../icons/column-view.svg'
 import ReactSVG from 'react-svg'
-
-
 export default class Topbar extends React.Component {
 
   buttonStyle = (direction) => {
     return this.props.data.history[direction].length > 0 ? 'active' : 'inactive'
   }
 
+  viewModeButtonStyle = (target) => {
+    if(target === this.props.data.viewMode){
+      return "svg-div-clicked"
+    }else{
+      return "svg-div"
+    }
+  }
+
   blurStyling = () => {
     return !this.props.data.window.focused ? {background: '#f6f6f6', color: '#acacac', boxShadow: '0 0 .5px inset'} : {background: null, color: null, boxShadow: null}
   }
-
 
   handleUploadClick = () => {
     document.getElementById('getFile').click()
@@ -41,10 +46,9 @@ export default class Topbar extends React.Component {
           </form>
           <a className="upload-botton active" onClick={this.handleUploadClick}><Upload /></a>
           <div className="view-mode-nav">
-            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={iconView}/>
-            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={listView}/>
-            <ReactSVG className="svgDiv" svgClassName="topbar-icon" path={columnView}/>
-
+            <div className={this.viewModeButtonStyle("iconView")}><ReactSVG id="iconView" svgClassName="topbar-icon" path={iconView}  onClick={this.props.selectViewMode}/></div>
+            <div className={this.viewModeButtonStyle("listView")}><ReactSVG id="listView"svgClassName="topbar-icon" path={listView}  onClick={this.props.selectViewMode}/></div>
+            <div className={this.viewModeButtonStyle("columnView")}><ReactSVG id="columnView" svgClassName="topbar-icon" path={columnView}  onClick={this.props.selectViewMode}/></div>
           </div>
           <form>
             <input className="search-field" placeholder="Search" onChange={this.props.handleSearch} value={this.props.data.search} style={this.blurStyling()}></input>

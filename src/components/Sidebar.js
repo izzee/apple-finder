@@ -7,10 +7,10 @@ import musicIcon from '../icons/music.ico'
 export default class Sidebar extends React.Component {
 
   checkIfSelected = (folder) => {
-    if(this.props.data.contextMenu.targetRow === folder.name){
+    if(this.props.data.contextMenu.targetRow === folder){
       return {backgroundColor: null, border: '2px solid 365cc8', borderRadius: '5px'}
     }
-    else if(this.props.data.activeFileset.name === folder.name){
+    else if(this.props.data.activeFileset.name === folder){
       return {backgroundColor: '#d8dfe8', border: '2px solid #d8dfe8'}
     } else {
       return {backgroundColor: null}
@@ -21,7 +21,7 @@ export default class Sidebar extends React.Component {
     if(folder === 'Documents'){
       return <img src={docIcon} alt="doc"></img>
     }if(folder === 'Pictures'){
-      return <img src={picIcon} alt="picture"></img>
+      return <img src={picIcon} alt="pics"></img>
     }if(folder === 'Music'){
       return <img src={musicIcon} alt="music"></img>
     }else{
@@ -36,7 +36,7 @@ export default class Sidebar extends React.Component {
         id={folder.name}
         onClick={this.props.selectFileset}
         onContextMenu={this.props.renderContextMenu}
-        style={this.checkIfSelected(folder)}>
+        style={this.checkIfSelected(folder.name)}>
           {this.selectIcon(folder.name)}
           {folder.name}
         </li>
