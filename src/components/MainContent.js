@@ -36,7 +36,7 @@ export default class MainContent extends React.Component {
 
   reformattedInfo=(file) => {
     return {created: this.reformatFileDate(file.created_at), updated: this.reformatFileDate(file.updated_at),
-      opened: this.reformatFileDate(Date()),type: this.reformatFileType(file), size: this.reformatFileSize(file)}
+      opened: this.reformatFileDate(moment()),type: this.reformatFileType(file), size: this.reformatFileSize(file)}
   }
 
   sortRows = () => {

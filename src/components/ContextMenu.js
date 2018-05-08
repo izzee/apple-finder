@@ -18,6 +18,8 @@ export default class ContextMenu extends React.Component {
       this.props.renameFile()
     }if(e.currentTarget.innerText === 'Upload a File'){
       document.getElementById('getFile').click()
+    }if(e.currentTarget.innerText === 'Open'){
+      this.props.open(this.props.info.target)
     }
   }
 
@@ -68,7 +70,7 @@ export default class ContextMenu extends React.Component {
   renderContextMenu = () => {
     if(this.props.info.target === 'folder'){
       return <ul>
-        <li onMouseEnter={this.hoverSecondaryMenu}>New Folder</li>
+        <li onMouseEnter={this.hoverSecondaryMenu}>Go to Folder</li>
         <hr></hr>
         <li onMouseEnter={this.hoverSecondaryMenu} onMouseOut={this.hoverSecondaryMenu} style={this.hoverStyle('View')}>
           View <Arrow /></li>

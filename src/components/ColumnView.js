@@ -1,11 +1,22 @@
 import React from 'react'
+import { Document, Page } from 'react-pdf';
 import ReactAudioPlayer from 'react-audio-player'
 import moment from 'moment'
 import audioplayerImg from '../icons/audioplayer.png'
 import Play from 'react-icons/lib/io/ios-play'
 import Pause from 'react-icons/lib/io/ios-pause'
+import ArrowL from 'react-icons/lib/go/arrow-left'
+import ArrowR from 'react-icons/lib/go/arrow-right'
 
 export default class ColumnView extends React.Component {
+
+  constructor(){
+    super()
+    this.state ={
+      numPages: null,
+      pageNumber: 1,
+    }
+  }
 
   getActiveFile = () => {
     let playSVG = document.getElementById('play-svg')
@@ -14,8 +25,30 @@ export default class ColumnView extends React.Component {
       playSVG.style.display = 'block'
       pauseSVG.style.display = 'none'
     }
-    if(this.props.data.activeFileset.documents[this.props.data.clickedRow]){
-      return this.props.data.activeFileset.documents[this.props.data.clickedRow]
+    if(this.props.data.clickedRow !== null){
+      let rows = document.getElementsByClassName('row')
+      let id = parseInt([...rows].find(row => parseInt(row.dataset.id,10) === this.props.data.clickedRow).id, 10)
+      return this.props.data.activeFileset.documents.find(doc => doc.id === id)
+    }
+  }
+
+  onDocumentLoad = ({ numPages }) => {
+    this.setState({ numPages });
+  }
+
+  handlePageChange = (e) => {
+    if(e.currentTarget.id ==='back-pdf' && this.state.pageNumber > 1){
+      this.setState({pageNumber: this.state.pageNumber - 1})
+    }if(e.currentTarget.id ==='forward-pdf' && this.state.pageNumber < this.state.numPages){
+      this.setState({pageNumber: this.state.pageNumber + 1})
+    }
+  }
+
+  buttonStyle = (target) => {
+    if(target === 'back'){
+      return this.state.pageNumber === 1 ? {backgroundColor: 'rgba(120,120,120,.95)', color: '#dadada'} : null
+    }if(target === 'forward'){
+      return this.state.pageNumber === this.state.numPages ? {backgroundColor: 'rgba(120,120,120,.95)', color: '#dadada'} : null
     }
   }
 
@@ -26,7 +59,19 @@ export default class ColumnView extends React.Component {
         if(file.filetype.includes('audio')){
           return this.renderAudioPlayer(file)
         }if(file.filetype.includes('image')){
-          return <img src={file.file_url}></img>
+          return <img src={file.file_url} className="cv-image-preview"></img>
+        }if(file.filetype.includes('pdf')){
+          return(
+            <div id="pdf-container">
+            <Document file={file.file_url} onLoadSuccess={this.onDocumentLoad}>
+              <Page pageNumber={this.state.pageNumber} scale={this.props.data.window.height/1850}/>
+            </Document>
+            <div className="pdf-nav">
+              <div id="back-pdf" className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('back')}><ArrowL/></div>
+              <div id="forward-pdf"  className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('forward')}><ArrowR/></div>
+            </div>
+          </div>
+          )
         }
       }
     }
@@ -112,7 +157,7 @@ export default class ColumnView extends React.Component {
           <div className="context-menu-target" onContextMenu={this.props.renderContextMenu}></div>
         </div>
         <div className="column-view-preview" onContextMenu={this.props.renderContextMenu}>
-          {this.renderFilePreview()}
+          <div className="preview-container">{this.renderFilePreview()}</div>
           {this.renderFileInfo()}
           <p id="file-duration"></p>
         </div>

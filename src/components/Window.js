@@ -18,6 +18,7 @@ export default class Window extends React.Component {
       search : "",
       activeFileset : null,
       clickedRow : null,
+      clickedRowId: null,
       viewMode : 'listView',
       history: {back: [], forward: []},
       sorted: {by: null, ascending: false},
@@ -77,11 +78,10 @@ export default class Window extends React.Component {
   renderContextMenu = (e) => {
     e.preventDefault()
     let target = e.currentTarget.className
-    console.log(target)
     let contextMenuInfo = defaultContextMenu
     if(this.state.window.focused){
       if(target === 'row'){contextMenuInfo = this.renderDocMenu(e)}
-      else if(target === 'placeholderRow' || target === 'context-menu-target' || e.target.className === 'sidebar' || e.target.className === 'column-view-preview'){contextMenuInfo = this.renderFolderMenu(e)}
+      else if(target === 'placeholderRow' || target === 'context-menu-target' || e.target.className === 'sidebar' || e.target.className === 'column-view-preview' || e.target.className ==='preview-container'){contextMenuInfo = this.renderFolderMenu(e)}
       this.setState({contextMenu: contextMenuInfo, renamingFile: null})
     }
   }
@@ -184,10 +184,15 @@ export default class Window extends React.Component {
   }
 
   selectRow = (e) => {
-    let id = parseInt(e.currentTarget.dataset.id, 10)
-    let url = this.state.activeFileset.documents[id].file_url
-    if (id === this.state.clickedRow && !this.state.renamingFile && url){window.open(url,'_blank')}
-    else{ this.setState({clickedRow: id}) }
+    let index = parseInt(e.currentTarget.dataset.id, 10)
+    let id = parseInt(e.currentTarget.id, 10)
+    if (index === this.state.clickedRow && !this.state.renamingFile){this.openFile(id)}
+    else{ this.setState({clickedRow: index}) }
+  }
+
+  openFile = (id) => {
+    let url = this.state.activeFileset.documents.find(doc => doc.id === id).file_url
+    if(url){window.open(url,'_blank')}
   }
 
   selectSortBy = (e) => {
@@ -236,7 +241,7 @@ export default class Window extends React.Component {
   }
 
   selectViewMode = (e) => {
-    this.setState({viewMode: e.currentTarget.id, clickedRow: 0})
+    this.setState({viewMode: e.currentTarget.id})
   }
 
   renderContents = () => {
@@ -247,7 +252,7 @@ export default class Window extends React.Component {
         <MainContent data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} handleNameChange={this.handleNameChange}/>
         <Sidebar data={this.state} selectFileset={this.selectFileset} renderContextMenu={this.renderContextMenu}/>
         {this.state.contextMenu ?
-          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} viewMode={this.state.viewMode} renameFile={this.renameFile} renderSecondaryMenu={this.renderSecondaryMenu} selectSortBy={this.selectSortBy} selectViewMode={this.selectViewMode}/> : null}
+          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} viewMode={this.state.viewMode} renameFile={this.renameFile} open={this.openFile} renderSecondaryMenu={this.renderSecondaryMenu} selectSortBy={this.selectSortBy} selectViewMode={this.selectViewMode}/> : null}
       </div>}
     else { return null }
   }
