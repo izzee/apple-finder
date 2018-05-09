@@ -358,17 +358,16 @@ body{
   width: 60%;
 }
 .play-button{
-  display: none;
+  display: block;
   border: 3px solid white;
-  background-color: rgba(20,20,20,.85);
-  box-shadow: 0 0 10px 2px rgba(20,20,20,.85);
+  background-color: #3c3c3c;
   width: 30px; height: 30px;
   border-radius: 50px;
   position: absolute;
   top: 50%; left: 50%;
   transform:translate(-15px, -15px);
 }
-.play-button svg{
+#play-svg, #pause-svg{
   text-align: center;
   margin: 2px;
   width: 26px; height: 26px;
@@ -384,6 +383,27 @@ body{
 }
 #pause-svg{
   display: none;
+}
+#progress-bar{
+
+  position: absolute;
+  top: 50%; left: 50%;
+  transform:translate(-15px, -15px);
+  width: 36px; height: 36px;
+  border-radius: 56px;
+  border: 2px solid white;
+  box-sizing: border-box;
+  transition-duration: .15s;
+  background-color: rgba(20,20,20,.75);
+  box-shadow: 0 0 10px 2px rgba(20,20,20,.85);
+}
+.CircularProgressbar{
+  width: 100%;
+  border-radius: 56px;
+}
+.CircularProgressbar .CircularProgressbar-path {
+  stroke: #bbbbbb;
+  stroke-width: 23px;
 }
 .cv-audio-preview img{
   border: 1px solid #e0e0e0;

@@ -3,10 +3,12 @@ import { Document, Page } from 'react-pdf';
 import ReactAudioPlayer from 'react-audio-player'
 import moment from 'moment'
 import audioplayerImg from '../icons/audioplayer.png'
+import CircularProgressbar from 'react-circular-progressbar';
 import Play from 'react-icons/lib/io/ios-play'
 import Pause from 'react-icons/lib/io/ios-pause'
 import ArrowL from 'react-icons/lib/go/arrow-left'
 import ArrowR from 'react-icons/lib/go/arrow-right'
+
 
 export default class ColumnView extends React.Component {
 
@@ -15,16 +17,12 @@ export default class ColumnView extends React.Component {
     this.state ={
       numPages: null,
       pageNumber: 1,
+      audioProgress: 0,
+      playing: false
     }
   }
 
   getActiveFile = () => {
-    let playSVG = document.getElementById('play-svg')
-    let pauseSVG = document.getElementById('pause-svg')
-    if(playSVG && pauseSVG){
-      playSVG.style.display = 'block'
-      pauseSVG.style.display = 'none'
-    }
     if(this.props.data.clickedRow !== null){
       let rows = document.getElementsByClassName('row')
       let id = parseInt([...rows].find(row => parseInt(row.dataset.id,10) === this.props.data.clickedRow).id, 10)
@@ -70,7 +68,7 @@ export default class ColumnView extends React.Component {
             <Document file={file.file_url} onLoadSuccess={this.onDocumentLoad}>
               <Page pageNumber={this.state.pageNumber} scale={this.props.data.window.height/1850}/>
             </Document>
-            <div className="pdf-nav">
+            <div className="pdf-nav" style={this.checkIfPlaying()}>
               <div id="back-pdf" className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('back')}><ArrowL/></div>
               <div id="forward-pdf"  className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('forward')}><ArrowR/></div>
             </div>
@@ -83,40 +81,57 @@ export default class ColumnView extends React.Component {
 
   toggleAudio = () => {
     let player = document.getElementById('player')
+    let audioNav = document.getElementsByClassName('play-button')[0]
     let playSVG = document.getElementById('play-svg')
     let pauseSVG = document.getElementById('pause-svg')
     if(player){
       if(player.paused){
         player.play()
-        playSVG.style.display = 'none'
-        pauseSVG.style.display = 'block'
-      }else{
+        this.setState({playing: true})
+      }else if(!player.paused){
         player.pause()
-        playSVG.style.display = 'block'
-        pauseSVG.style.display = 'none'
+        this.setState({playing: false})
       }
+    }
+  }
+
+  progressBarStyle = () => {
+    if(this.state.playing){
+      return {width: '56px', height: '56px', transform: 'translate(-25px, -25px)', opacity: '100'}
     }
   }
 
   renderAudioPlayer = (file) => {
     return(
-      <div className="cv-audio-preview">
-        <div className="play-button" onClick={this.toggleAudio}>
-          <Play id="play-svg"/>
-          <Pause id="pause-svg"/>
+      <div className="cv-audio-preview" >
+        <div id="progress-bar" style={this.progressBarStyle()}> <CircularProgressbar percentage={this.state.audioProgress} textForPercentage={null}/></div>
+        <div className="play-button" onClick={this.toggleAudio} style={{display: this.state.playing ? 'block' : null}}>
+          <Play id="play-svg" style={{display: this.state.playing? 'none' : 'block'}}/>
+          <Pause id="pause-svg" style={{display: this.state.playing? 'block' : 'none'}}/>
+
         </div>
         <img src={audioplayerImg}></img>
-        <ReactAudioPlayer id="player" src={file.file_url} onLoadedMetadata={this.getAudioDuration}/>
+        <ReactAudioPlayer id="player" src={file.file_url} listenInterval={100} onListen={this.updateProgress} onLoadedMetadata={this.getAudioDuration} onAbort={this.handleStopAudio}/>
       </div>
     )
   }
 
+  handleStopAudio = () => {
+    this.setState({playing: false, audioProgress: 0})
+  }
+
   getAudioDuration = (e) =>{
     if(e.srcElement){
+      this.setState({audioProgress : 0})
       let duration = moment.utc(e.srcElement.duration*1000).format('mm:ss')
       document.getElementById('variable-info-title').innerText = "Duration"
       document.getElementById('variable-info-value').innerText = duration
     }
+  }
+
+  updateProgress = () => {
+    let player = document.getElementById('player');
+    this.setState({audioProgress: player.currentTime/player.duration*100})
   }
 
   renderFileInfo = () => {
