@@ -88,7 +88,7 @@ export default class MainContent extends React.Component {
       return <ColumnView data={this.props.data} renderRows={this.renderRows} reformattedInfo={this.reformattedInfo} renderContextMenu={this.props.renderContextMenu}/>
     }else if(this.props.data.viewMode === 'iconView'){
       return <IconView data={this.props.data} sortRows={this.sortRows}
-      selectRow={this.props.selectRow} renderContextMenu={this.props.renderContextMenu}/>
+      selectRow={this.props.selectRow} renderContextMenu={this.props.renderContextMenu} handleNameChange={this.props.handleNameChange}/>
     }
   }
 

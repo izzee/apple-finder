@@ -30,7 +30,7 @@ export default class Topbar extends React.Component {
 
   render(){
     return(
-      <div className="topbar" style={this.blurStyling()}>
+      <div className="topbar" style={this.blurStyling()} onContextMenu={(e) => e.preventDefault()}>
           <div className="left-buttons">
             <div className="close-button" style={this.blurStyling()}></div>
             <div className="min-button" style={this.blurStyling()}></div>

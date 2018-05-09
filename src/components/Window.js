@@ -51,7 +51,7 @@ export default class Window extends React.Component {
     }
     let row = this.state.clickedRow
     let allRows = this.state.activeFileset.documents
-    if(row !== null && this.state.viewMode !== 'iconView'){
+    if(row !== null){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
       if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
       this.scrollToRow(this.state.clickedRow, false)
@@ -60,7 +60,11 @@ export default class Window extends React.Component {
 
   scrollToRow = (rowId, smooth) => {
     let rows = [...document.getElementsByClassName('row')]
-    let targetRow = rows.find(row => {return parseInt(row.dataset.id,10) === rowId})
+    let targetRow = rows.find(row => {return parseInt(row.id,10) === rowId})
+    if(this.state.viewMode ==='iconView'){
+      let icons = [...document.getElementsByClassName('file-icon')]
+      targetRow = icons.find(icon => parseInt(icon.id) === rowId)
+    }
     if(smooth){targetRow.scrollIntoView({block: 'end', behavior: 'smooth'})
     }else{targetRow.scrollIntoViewIfNeeded()}
   }
@@ -76,13 +80,14 @@ export default class Window extends React.Component {
   }
 
   renderContextMenu = (e) => {
+    e.stopPropagation();
     e.preventDefault()
     let target = e.currentTarget.className
     let contextMenuInfo = defaultContextMenu
     console.log(target)
     if(this.state.window.focused){
-      if(target === 'row'){contextMenuInfo = this.renderDocMenu(e)}
-      else if(target === 'placeholderRow' || target === 'context-menu-target' || e.target.className === 'sidebar' || e.target.className === 'column-view-preview' || e.target.className ==='preview-container'){contextMenuInfo = this.renderFolderMenu(e)}
+      if(target === 'row' || target==='icon-handle'){contextMenuInfo = this.renderDocMenu(e)}
+      else if(target === 'placeholderRow' || target === 'context-menu-target' || e.target.className === 'sidebar' || e.target.className === 'column-view-preview' || e.target.className ==='preview-container' || target === 'icon-view-window'){contextMenuInfo = this.renderFolderMenu(e)}
       this.setState({contextMenu: contextMenuInfo, renamingFile: null})
     }
   }
@@ -149,7 +154,7 @@ export default class Window extends React.Component {
     this.setState({folders: newFolders, activeFileset: newFolders[targetFolderId], uploadingFile: null})
     let targetRow = newFolders[targetFolderId].documents.find(docu => docu.id === doc.id)
     let targetRowId = newFolders[targetFolderId].documents.indexOf(targetRow)
-    this.scrollToRow(targetRowId, true)
+    this.scrollToRow(doc.id, true)
     this.setState({clickedRow: targetRowId})
   }
 
@@ -243,7 +248,7 @@ export default class Window extends React.Component {
   }
 
   selectViewMode = (e) => {
-    this.setState({viewMode: e.currentTarget.id})
+    this.setState({viewMode: e.currentTarget.id, clickedRow: null})
   }
 
   renderContents = () => {

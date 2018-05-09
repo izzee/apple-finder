@@ -48,7 +48,7 @@ export default class ContextMenu extends React.Component {
     if(!this.props.sorted.by && target === 'None'){ return <Check />}
     return target === this.props.sorted.by
     || target === this.props.viewMode
-    || target === this.props.data.activeFileset?
+    || target === this.props.data.activeFileset.name ?
     <Check /> : <Check style={{visibility: 'hidden'}}/>
   }
 

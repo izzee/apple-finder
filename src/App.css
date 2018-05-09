@@ -20,7 +20,7 @@ body{
   box-shadow: 0 1px 5px #284762;
   border-radius: 5px;
   display: grid;
-  grid-template-columns: 150px 1fr;
+  grid-template-columns: 180px 1fr;
   grid-template-rows: 53px 1fr;
 }
 .window-container:hover{
@@ -100,7 +100,7 @@ body{
   display: flex;
   flex-direction: row;
   position: absolute;
-  top: 25px; left: 152px;
+  top: 25px; left: 182px;
   width: 80px; height: 21px;
   border: 1px solid #c1bfc1;
   border-radius: 5px;
@@ -457,9 +457,9 @@ body{
 .icon-view-window{
   overflow: scroll;
 }
-/* .icon-view-wrapper{
-  margin: 15px 0 0 15px;
-} */
+.icon-view-wrapper{
+  margin: auto;
+}
 .file-icon{
   display: inline-block;
   margin: 15px;
@@ -478,17 +478,20 @@ body{
   margin: 5px auto;
   height: 60px;
 }
-.file-icon p{
+.file-icon span{
   color: black;
   margin-top: 5px;
   display: inline-block;
-  border: 2px solid transparent;
+  border: 3px solid transparent;
   box-sizing: border-box;
   max-width: 100px;
   border-radius: 3px;
   overflow:hidden;
   text-overflow: ellipsis;
-
+}
+.file-icon input{
+  border: none;
+  outline: none;
 }
 .active-file-icon .icon-zone{
   background-color: #e0e0e0;
@@ -496,13 +499,12 @@ body{
 .file-icon:hover{
   cursor: default;
 }
-.active-file-icon p{
+.active-file-icon span{
   cursor: default;
   color: white;
-  border: 2px solid #116cd6;
+  border: 3px solid #116cd6;
   background-color: #116cd6;
 }
-
 .context-menu, .secondary-context-menu{
   border-radius: 4px;
   box-shadow: 0 1px 6px #4a4a4a;

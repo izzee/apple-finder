@@ -52,6 +52,10 @@ export default class ColumnView extends React.Component {
     }
   }
 
+  preventScroll = () =>{
+    return (this.props.data.contextMenu.target) ? {overflow: 'hidden'} : {overflow: null}
+  }
+
   renderFilePreview = () => {
     if(this.getActiveFile()){
       let file = this.getActiveFile()
@@ -150,7 +154,7 @@ export default class ColumnView extends React.Component {
   render(){
     return(
       <div className="column-view-container">
-        <div className="body-table">
+        <div className="body-table" style={this.preventScroll()}>
           <table><tbody>
             {this.props.renderRows()}
           </tbody></table>
