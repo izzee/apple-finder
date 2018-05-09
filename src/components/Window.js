@@ -51,7 +51,7 @@ export default class Window extends React.Component {
     }
     let row = this.state.clickedRow
     let allRows = this.state.activeFileset.documents
-    if(row !== null){
+    if(row !== null && this.state.viewMode !== 'iconView'){
       if(e.keyCode === 38){this.setState({clickedRow : row > 0 ? row-1 : allRows.length-1})}
       if(e.keyCode === 40){this.setState({clickedRow : row < allRows.length-1 ? row+1 : 0})}
       this.scrollToRow(this.state.clickedRow, false)
@@ -63,10 +63,10 @@ export default class Window extends React.Component {
     let targetRow = rows.find(row => {return parseInt(row.id,10) === rowId})
     if(this.state.viewMode ==='iconView'){
       let icons = [...document.getElementsByClassName('file-icon')]
-      targetRow = icons.find(icon => parseInt(icon.id) === rowId)
+      targetRow = icons.find(icon => parseInt(icon.id, 10) === rowId)
     }
-    if(smooth){targetRow.scrollIntoView({block: 'end', behavior: 'smooth'})
-    }else{targetRow.scrollIntoViewIfNeeded()}
+    if(smooth && targetRow){targetRow.scrollIntoView({block: 'end', behavior: 'smooth'})
+  }else if(targetRow){targetRow.scrollIntoViewIfNeeded()}
   }
 
   onWindowClick = (e) => {

@@ -9,7 +9,6 @@ import Pause from 'react-icons/lib/io/ios-pause'
 import ArrowL from 'react-icons/lib/go/arrow-left'
 import ArrowR from 'react-icons/lib/go/arrow-right'
 
-
 export default class ColumnView extends React.Component {
 
   constructor(){
@@ -22,6 +21,10 @@ export default class ColumnView extends React.Component {
     }
   }
 
+  componentWillReceiveProps = () => {
+    this.setState({pageNumber: 1, numPages: null, audioProgress: 0, playing: false})
+  }
+
   getActiveFile = () => {
     if(this.props.data.clickedRow !== null){
       let rows = document.getElementsByClassName('row')
@@ -31,7 +34,10 @@ export default class ColumnView extends React.Component {
   }
 
   onDocumentLoad = ({ numPages }) => {
+    console.log('loaded')
     this.setState({ numPages });
+    this.setState({pageNumber: 1})
+    console.log(this.state)
   }
 
   handlePageChange = (e) => {
@@ -42,7 +48,7 @@ export default class ColumnView extends React.Component {
     }
   }
 
-  buttonStyle = (target) => {
+  pdfButtonStyle = (target) => {
     if(target === 'back'){
       return this.state.pageNumber === 1 ? {backgroundColor: 'rgba(120,120,120,.95)', color: '#dadada'} : null
     }if(target === 'forward'){
@@ -61,16 +67,16 @@ export default class ColumnView extends React.Component {
         if(file.filetype.includes('audio')){
           return this.renderAudioPlayer(file)
         }if(file.filetype.includes('image')){
-          return <img src={file.file_url} className="cv-image-preview"></img>
+          return <img src={file.file_url} className="cv-image-preview" alt={file.filetype}></img>
         }if(file.filetype.includes('pdf')){
           return(
             <div id="pdf-container">
             <Document file={file.file_url} onLoadSuccess={this.onDocumentLoad}>
               <Page pageNumber={this.state.pageNumber} scale={this.props.data.window.height/1850}/>
             </Document>
-            <div className="pdf-nav" style={this.checkIfPlaying()}>
-              <div id="back-pdf" className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('back')}><ArrowL/></div>
-              <div id="forward-pdf"  className="pdf-button" onClick={this.handlePageChange} style={this.buttonStyle('forward')}><ArrowR/></div>
+            <div className="pdf-nav">
+              <div id="back-pdf" className="pdf-button" onClick={this.handlePageChange} style={this.pdfButtonStyle('back')}><ArrowL/></div>
+              <div id="forward-pdf"  className="pdf-button" onClick={this.handlePageChange} style={this.pdfButtonStyle('forward')}><ArrowR/></div>
             </div>
           </div>
           )
@@ -81,9 +87,6 @@ export default class ColumnView extends React.Component {
 
   toggleAudio = () => {
     let player = document.getElementById('player')
-    let audioNav = document.getElementsByClassName('play-button')[0]
-    let playSVG = document.getElementById('play-svg')
-    let pauseSVG = document.getElementById('pause-svg')
     if(player){
       if(player.paused){
         player.play()
@@ -98,19 +101,28 @@ export default class ColumnView extends React.Component {
   progressBarStyle = () => {
     if(this.state.playing){
       return {width: '56px', height: '56px', transform: 'translate(-25px, -25px)', opacity: '100'}
+    }else{
+      return null
+    }
+  }
+
+  playButtonStyle = () => {
+    if(this.state.playing){
+      return {display: 'block', boxShadow: 'none'}
+    }else{
+      return null
     }
   }
 
   renderAudioPlayer = (file) => {
     return(
-      <div className="cv-audio-preview" >
+      <div className="cv-audio-preview">
         <div id="progress-bar" style={this.progressBarStyle()}> <CircularProgressbar percentage={this.state.audioProgress} textForPercentage={null}/></div>
-        <div className="play-button" onClick={this.toggleAudio} style={{display: this.state.playing ? 'block' : null}}>
+        <div className="play-button" onClick={this.toggleAudio} style={this.playButtonStyle()}>
           <Play id="play-svg" style={{display: this.state.playing? 'none' : 'block'}}/>
           <Pause id="pause-svg" style={{display: this.state.playing? 'block' : 'none'}}/>
-
         </div>
-        <img src={audioplayerImg}></img>
+        <img src={audioplayerImg} alt={file.filetype}></img>
         <ReactAudioPlayer id="player" src={file.file_url} listenInterval={100} onListen={this.updateProgress} onLoadedMetadata={this.getAudioDuration} onAbort={this.handleStopAudio}/>
       </div>
     )
@@ -122,7 +134,7 @@ export default class ColumnView extends React.Component {
 
   getAudioDuration = (e) =>{
     if(e.srcElement){
-      this.setState({audioProgress : 0})
+      this.setState({playing: false, audioProgress : 0})
       let duration = moment.utc(e.srcElement.duration*1000).format('mm:ss')
       document.getElementById('variable-info-title').innerText = "Duration"
       document.getElementById('variable-info-value').innerText = duration

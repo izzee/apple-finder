@@ -358,13 +358,15 @@ body{
   width: 60%;
 }
 .play-button{
-  display: block;
+  display: none;
   border: 3px solid white;
-  background-color: #3c3c3c;
+  background-color:  #7a7a7a;
+  box-shadow: 0 0 10px 2px rgba(20,20,20,.85);
   width: 30px; height: 30px;
   border-radius: 50px;
   position: absolute;
   top: 50%; left: 50%;
+  transition-duration: .25s;
   transform:translate(-15px, -15px);
 }
 #play-svg, #pause-svg{
@@ -385,7 +387,7 @@ body{
   display: none;
 }
 #progress-bar{
-
+  opacity: 0;
   position: absolute;
   top: 50%; left: 50%;
   transform:translate(-15px, -15px);
@@ -393,8 +395,8 @@ body{
   border-radius: 56px;
   border: 2px solid white;
   box-sizing: border-box;
-  transition-duration: .15s;
-  background-color: rgba(20,20,20,.75);
+  transition-duration: .25s;
+  background-color: #7a7a7a;
   box-shadow: 0 0 10px 2px rgba(20,20,20,.85);
 }
 .CircularProgressbar{
@@ -411,6 +413,10 @@ body{
 }
 .cv-audio-preview:hover .play-button{
   display:block;
+  background-color: #3c3c3c;
+}
+.cv-audio-preview:hover #progress-bar{
+  background-color: #3c3c3c;
 }
 #pdf-container{
   position: relative;

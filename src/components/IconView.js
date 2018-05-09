@@ -12,7 +12,7 @@ export default class IconView extends React.Component {
     return files.map(file => {
       return <a key={file.id} className={this.styleActiveFile(files.indexOf(file))} data-id={files.indexOf(file)} id={file.id}>
         <div className="icon-zone">
-          <img className='icon-handle' src={this.selectFileIcon(file.filetype)} id={file.id} data-id={files.indexOf(file)} onClick={this.props.selectRow} onContextMenu={this.handleContextMenu}></img>
+          <img className='icon-handle' src={this.selectFileIcon(file.filetype)} id={file.id} data-id={files.indexOf(file)} onClick={this.props.selectRow} onContextMenu={this.handleContextMenu} alt={file.filetype}></img>
         </div>
         <span id={file.id} data-id={files.indexOf(file)}  className='icon-handle' onClick={this.props.selectRow} onContextMenu={this.handleContextMenu} style={this.styleRenamingFile(file)}>
           {this.checkIfRenaming(file)}</span>
@@ -27,7 +27,6 @@ export default class IconView extends React.Component {
 
 
   styleIconWrapper = () => {
-    let windowWidth = Math.round(this.props.data.window.width*.55-180)
     let numRows = this.getNumRows()
     if(numRows > 3){return {width: numRows*130}}
   }
