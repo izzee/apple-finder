@@ -28,9 +28,13 @@ export default class ContextMenu extends React.Component {
   }
 
   secondaryMenuStyle = () => {
+    if(this.props.info.secondary === 'Go to Folder'){
+      return {display: 'block', left: this.props.info.x+123, top: this.props.info.y}
+    }
     if(this.props.info.secondary === 'View'){
       return {display: 'block', left: this.props.info.x+123, top: this.props.info.y+35}
-    }if(this.props.info.secondary === 'Arrange By'){
+    }
+    if(this.props.info.secondary === 'Arrange By'){
       return {display: 'block', left: this.props.info.x+123, top: this.props.info.y+53}
     }
   }
@@ -42,11 +46,20 @@ export default class ContextMenu extends React.Component {
 
   checkMark = (target) => {
     if(!this.props.sorted.by && target === 'None'){ return <Check />}
-    return target === this.props.sorted.by || target === this.props.viewMode ?
+    return target === this.props.sorted.by
+    || target === this.props.viewMode
+    || target === this.props.data.activeFileset?
     <Check /> : <Check style={{visibility: 'hidden'}}/>
   }
 
   secondaryMenuContent = () => {
+    if(this.props.info.secondary === 'Go to Folder'){
+      return <ul>
+        <li onClick={this.props.selectFileset} id="Documents">{this.checkMark('Documents')}<span>Documents</span></li>
+        <li onClick={this.props.selectFileset} id="Pictures">{this.checkMark('Pictures')}<span>Pictures</span></li>
+        <li onClick={this.props.selectFileset} id="Music">{this.checkMark('Music')}<span>Music</span></li>
+      </ul>
+    }
     if(this.props.info.secondary === 'Arrange By'){
       return <ul>
         <li onClick={this.props.selectSortBy}>{this.checkMark('Name')}<span>Name</span></li>
@@ -70,7 +83,7 @@ export default class ContextMenu extends React.Component {
   renderContextMenu = () => {
     if(this.props.info.target === 'folder'){
       return <ul>
-        <li onMouseEnter={this.hoverSecondaryMenu}>Go to Folder</li>
+        <li onMouseEnter={this.hoverSecondaryMenu}>Go to Folder <Arrow /></li>
         <hr></hr>
         <li onMouseEnter={this.hoverSecondaryMenu} onMouseOut={this.hoverSecondaryMenu} style={this.hoverStyle('View')}>
           View <Arrow /></li>

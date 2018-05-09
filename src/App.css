@@ -454,6 +454,54 @@ body{
 .cv-file-info td:nth-child(2){
   text-align: left;
 }
+.icon-view-window{
+  overflow: scroll;
+}
+/* .icon-view-wrapper{
+  margin: 15px 0 0 15px;
+} */
+.file-icon{
+  display: inline-block;
+  margin: 15px;
+  height: 100px; width: 100px;
+  text-align: center;
+  vertical-align: bottom;
+  box-sizing: border-box;
+  outline: none;
+}
+.icon-zone{
+  margin: auto;
+  width: 70px; height: 70px;
+  border-radius: 3px;
+}
+.icon-zone img{
+  margin: 5px auto;
+  height: 60px;
+}
+.file-icon p{
+  color: black;
+  margin-top: 5px;
+  display: inline-block;
+  border: 2px solid transparent;
+  box-sizing: border-box;
+  max-width: 100px;
+  border-radius: 3px;
+  overflow:hidden;
+  text-overflow: ellipsis;
+
+}
+.active-file-icon .icon-zone{
+  background-color: #e0e0e0;
+}
+.file-icon:hover{
+  cursor: default;
+}
+.active-file-icon p{
+  cursor: default;
+  color: white;
+  border: 2px solid #116cd6;
+  background-color: #116cd6;
+}
 
 .context-menu, .secondary-context-menu{
   border-radius: 4px;

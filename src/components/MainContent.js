@@ -2,6 +2,7 @@ import React from 'react'
 import ContentRow from './ContentRow'
 import ColumnView from './ColumnView'
 import ListView from './ListView'
+import IconView from './IconView'
 import moment from 'moment'
 import formatBytes from 'format-bytes'
 
@@ -86,7 +87,8 @@ export default class MainContent extends React.Component {
     }else if(this.props.data.viewMode === 'columnView'){
       return <ColumnView data={this.props.data} renderRows={this.renderRows} reformattedInfo={this.reformattedInfo} renderContextMenu={this.props.renderContextMenu}/>
     }else if(this.props.data.viewMode === 'iconView'){
-      return null
+      return <IconView data={this.props.data} sortRows={this.sortRows}
+      selectRow={this.props.selectRow} renderContextMenu={this.props.renderContextMenu}/>
     }
   }
 
