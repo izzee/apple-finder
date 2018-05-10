@@ -21,7 +21,7 @@ export default class IconView extends React.Component {
   }
 
   getNumRows = () => {
-    let width = Math.round(this.props.data.window.width*.55-180)
+    let width = Math.round(this.props.data.window.width*.6-180)
     return Math.floor(width/130)
   }
 

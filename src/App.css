@@ -14,7 +14,7 @@ body{
 .window-container{
   position: relative;
   margin: 15vh auto;
-  width: 55vw; height: 70vh;
+  width: 60vw; height: 70vh;
   min-height: 515px; min-width: 666px;
   background-color: white;
   box-shadow: 0 1px 5px #284762;

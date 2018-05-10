@@ -1,6 +1,7 @@
 import React from 'react'
 import Arrow from 'react-icons/lib/io/ios-play'
 import Check from 'react-icons/lib/io/checkmark'
+import download from 'downloadjs'
 
 export default class ContextMenu extends React.Component {
 
@@ -18,8 +19,12 @@ export default class ContextMenu extends React.Component {
       this.props.renameFile()
     }if(e.currentTarget.innerText === 'Upload a File'){
       document.getElementById('getFile').click()
-    }if(e.currentTarget.innerText === 'Open'){
+    }if(e.currentTarget.innerText === 'Open in New Tab'){
       this.props.open(this.props.info.target)
+    }if(e.currentTarget.innerText === 'Copy Link'){
+      this.props.copy()
+    }if(e.currentTarget.innerText === 'Download'){
+      download(this.props.url())
     }
   }
 
@@ -51,6 +56,8 @@ export default class ContextMenu extends React.Component {
     || target === this.props.data.activeFileset.name ?
     <Check /> : <Check style={{visibility: 'hidden'}}/>
   }
+
+
 
   secondaryMenuContent = () => {
     if(this.props.info.secondary === 'Go to Folder'){
@@ -94,13 +101,11 @@ export default class ContextMenu extends React.Component {
       </ul>
     }else{
       return <ul>
-        <li onClick={this.handleClick}>Open</li>
+        <li onClick={this.handleClick}>Open in New Tab</li>
         <hr></hr>
         <li onClick={this.handleClick}>Rename</li>
         <li onClick={this.handleClick}>Download</li>
         <li onClick={this.handleClick}>Copy Link</li>
-        <hr></hr>
-        <li onClick={this.handleClick}>Move to Trash</li>
       </ul>
     }
   }

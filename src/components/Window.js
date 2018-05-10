@@ -60,13 +60,14 @@ export default class Window extends React.Component {
 
   scrollToRow = (rowId, smooth) => {
     let rows = [...document.getElementsByClassName('row')]
+    let row = rows.find(row => {return parseInt(row.dataset.id,10) === rowId})
     let targetRow = rows.find(row => {return parseInt(row.id,10) === rowId})
     if(this.state.viewMode ==='iconView'){
       let icons = [...document.getElementsByClassName('file-icon')]
       targetRow = icons.find(icon => parseInt(icon.id, 10) === rowId)
     }
     if(smooth && targetRow){targetRow.scrollIntoView({block: 'end', behavior: 'smooth'})
-  }else if(targetRow){targetRow.scrollIntoViewIfNeeded()}
+  }else if(row){row.scrollIntoViewIfNeeded()}
   }
 
   onWindowClick = (e) => {
@@ -202,6 +203,23 @@ export default class Window extends React.Component {
     if(url.file_url){window.open(url.file_url,'_blank')}
   }
 
+  getURL = () => {
+    let docs = this.state.activeFileset
+    let fileId = this.state.contextMenu.target
+    let activeFile = docs.documents.find(doc => doc.id === fileId)
+    if(activeFile){ return activeFile.file_url.toString()}
+  }
+
+  copyToClipboard = () => {
+    let url = this.getURL()
+    let dummy = document.createElement("input");
+    document.body.appendChild(dummy);
+    dummy.setAttribute('value', url);
+    dummy.select();
+    document.execCommand("copy");
+    document.body.removeChild(dummy);
+  }
+
   selectSortBy = (e) => {
     let category = e.currentTarget.querySelector('span').innerText
     let newSorted = Object.assign({}, this.state.sorted)
@@ -259,7 +277,7 @@ export default class Window extends React.Component {
         <MainContent data={this.state} selectRow={this.selectRow} selectSortBy={this.selectSortBy} renderContextMenu={this.renderContextMenu} handleNameChange={this.handleNameChange}/>
         <Sidebar data={this.state} selectFileset={this.selectFileset} renderContextMenu={this.renderContextMenu}/>
         {this.state.contextMenu ?
-          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} viewMode={this.state.viewMode} renameFile={this.renameFile} open={this.openFile} renderSecondaryMenu={this.renderSecondaryMenu} selectSortBy={this.selectSortBy}
+          <ContextMenu info={this.state.contextMenu} sorted={this.state.sorted} viewMode={this.state.viewMode} renameFile={this.renameFile} url={this.getURL} open={this.openFile} copy={this.copyToClipboard} renderSecondaryMenu={this.renderSecondaryMenu} selectSortBy={this.selectSortBy}
           selectFileset={this.selectFileset} selectViewMode={this.selectViewMode}
         data={this.state}/> : null}
       </div>}
